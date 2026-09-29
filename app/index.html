@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>先生くじ</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ===== 授業準備画面（先生用） ===== -->
+  <section id="setup" class="setup" hidden>
+    <header class="setup-head">
+      <h1>先生くじ　授業準備</h1>
+      <p class="muted">この画面は先生用です。児童には「授業を始める」から先の画面を見せてください。</p>
+      <p id="storage-warning" class="error-box" hidden>
+        このブラウザでは結果を保存できません。ページを再読み込みすると抽選結果が消えます。
+      </p>
+    </header>
+
+    <div class="panel">
+      <h2>先生データ <span class="muted small">data/teachers.csv</span></h2>
+      <p id="csv-status" class="csv-status"></p>
+      <ul id="csv-errors" class="error-box" hidden></ul>
+      <div class="counts">
+        <span>A：<b id="count-A">–</b>人</span>
+        <span>B：<b id="count-B">–</b>人</span>
+        <span>C：<b id="count-C">–</b>人</span>
+      </div>
+      <label class="btn small-btn file-btn">
+        teachers.csv を選ぶ
+        <input type="file" id="csv-file" accept=".csv,text/csv,text/comma-separated-values,text/plain">
+      </label>
+    </div>
+
+    <div class="panel">
+      <h2>クラス設定</h2>
+      <div id="group-inputs" class="group-inputs"></div>
+    </div>
+
+    <div class="panel">
+      <h2>必要人数</h2>
+      <div class="counts">
+        <span>A：<b id="need-A">–</b></span>
+        <span>B：<b id="need-B">–</b></span>
+        <span>C：<b id="need-C">–</b></span>
+      </div>
+      <ul id="need-errors" class="error-box" hidden></ul>
+      <ul id="need-warnings" class="warn-box" hidden></ul>
+      <button id="btn-create" class="btn primary">割当を作成</button>
+      <p id="assign-status" class="assign-status"></p>
+    </div>
+
+    <div class="panel">
+      <h2>授業を始める</h2>
+      <p id="start-hint" class="muted"></p>
+      <div id="class-buttons" class="class-buttons"></div>
+      <button id="btn-list" class="btn list-btn">結果一覧を見る（3クラス）</button>
+    </div>
+
+    <div class="panel">
+      <h2>途中経過の保存ファイル</h2>
+      <p class="muted">割当とくじの進み具合（先生データも含む）をファイルに保存できます。
+        もし結果が消えても、このファイルから元に戻せます。授業の終わりに保存しておくと安心です。</p>
+      <div class="file-actions">
+        <button id="btn-save-file" class="btn">保存ファイルを作る</button>
+        <label class="btn file-btn">
+          保存ファイルから元に戻す
+          <input type="file" id="file-restore" accept=".json,application/json,text/plain">
+        </label>
+      </div>
+      <p id="file-status" class="csv-status ok"></p>
+    </div>
+
+    <div class="reset-area">
+      <button id="btn-reset" class="btn danger">全リセット</button>
+    </div>
+  </section>
+
+  <!-- ===== 授業中のくじ画面（児童に見せる） ===== -->
+  <section id="lottery" class="lottery" hidden>
+    <button id="btn-back" class="back-link">準備画面へ</button>
+
+    <main class="stage">
+      <p id="lot-class" class="lot-class"></p>
+
+      <div id="state-ready" class="state">
+        <p id="lot-group" class="lot-group"></p>
+        <button id="btn-draw" class="btn draw">くじを引く</button>
+      </div>
+
+      <div id="state-wait" class="state" hidden>
+        <p class="wait">だれかな<span class="dots">……</span></p>
+      </div>
+
+      <div id="state-result" class="state" hidden>
+        <p class="result-lead"><span id="res-group"></span>の先生は……</p>
+        <p id="res-name" class="result-name"></p>
+      </div>
+    </main>
+
+    <nav class="lot-nav">
+      <button id="btn-prev" class="btn nav">◀ 前の班</button>
+      <button id="btn-next" class="btn nav">次の班 ▶</button>
+    </nav>
+  </section>
+
+  <!-- ===== 結果一覧（スクリーンショット用） ===== -->
+  <section id="list" class="list" hidden>
+    <header class="list-head">
+      <h1>先生くじ　結果一覧</h1>
+      <span id="list-date" class="list-date"></span>
+      <button id="btn-list-back" class="back-link">準備画面へ</button>
+    </header>
+    <div id="list-grid" class="list-grid"></div>
+    <p id="list-note" class="list-note"></p>
+  </section>
+
+  <script src="config.js"></script>
+  <script src="lottery.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

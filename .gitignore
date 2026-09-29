@@ -1,0 +1,3 @@
+# 先生の名簿（個人情報）は公開しない
+data/teachers.csv
+.DS_Store

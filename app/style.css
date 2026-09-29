@@ -1,0 +1,259 @@
+:root {
+  --ink: #1a1a1a;
+  --muted: #666;
+  --line: #d6d6d6;
+  --bg: #ffffff;
+  --panel: #f6f7f9;
+  --accent: #1f5fae;      /* ボタンの色（青） */
+  --accent-dark: #174a88;
+  --danger: #c0392b;
+  --font: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "BIZ UDPGothic", "Yu Gothic UI",
+          "Yu Gothic", "Meiryo", "Noto Sans JP", sans-serif;
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+
+html, body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font);
+  -webkit-text-size-adjust: 100%;
+}
+
+.btn {
+  font: inherit;
+  font-weight: 700;
+  border: 2px solid var(--accent);
+  background: #fff;
+  color: var(--accent);
+  border-radius: 14px;
+  padding: 0.6em 1.4em;
+  cursor: pointer;
+  touch-action: manipulation;
+  white-space: nowrap;
+}
+.btn:hover:not(:disabled) { background: #eef3fa; }
+.btn:disabled { opacity: 0.35; cursor: default; }
+.btn.primary { background: var(--accent); color: #fff; }
+.btn.primary:hover:not(:disabled) { background: var(--accent-dark); }
+.btn.danger { border-color: var(--danger); color: var(--danger); }
+.btn.danger:hover:not(:disabled) { background: #fbeeee; }
+
+/* ---------- 授業準備画面 ---------- */
+.setup {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 24px 16px 48px;
+  font-size: 18px;
+  line-height: 1.6;
+}
+.setup h1 { font-size: 28px; margin: 0 0 4px; }
+.setup h2 { font-size: 20px; margin: 0 0 10px; }
+.muted { color: var(--muted); }
+.small { font-size: 14px; font-weight: 400; }
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin-top: 16px;
+}
+.counts { display: flex; gap: 28px; flex-wrap: wrap; font-size: 22px; margin: 6px 0 12px; }
+.counts b { font-size: 26px; }
+
+.error-box {
+  color: var(--danger);
+  background: #fdf1f0;
+  border: 1px solid #f0c4bf;
+  border-radius: 8px;
+  padding: 10px 14px 10px 32px;
+  margin: 8px 0;
+  font-weight: 700;
+}
+p.error-box { padding-left: 14px; }
+.warn-box {
+  color: #8a5300;
+  background: #fff7e6;
+  border: 1px solid #f0d49a;
+  border-radius: 8px;
+  padding: 10px 14px 10px 32px;
+  margin: 8px 0;
+  font-weight: 700;
+}
+.csv-status { margin: 0 0 4px; }
+.csv-status.ok { color: #1d7a3a; font-weight: 700; }
+
+.file-btn { display: inline-block; position: relative; overflow: hidden; }
+.file-btn input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+.small-btn { font-size: 16px; padding: 0.4em 1em; }
+
+.group-inputs { display: grid; gap: 10px; }
+.group-row { display: flex; align-items: center; gap: 12px; font-size: 22px; }
+.group-row .cls { min-width: 5.5em; font-weight: 700; }
+.group-row input {
+  font: inherit;
+  width: 3.2em;
+  padding: 4px 8px;
+  text-align: center;
+  border: 2px solid var(--line);
+  border-radius: 8px;
+}
+
+#btn-create { font-size: 22px; margin-top: 4px; }
+.assign-status { margin: 10px 0 0; }
+.assign-status .warn { color: var(--danger); font-weight: 700; }
+
+.class-buttons { display: flex; flex-wrap: wrap; gap: 12px; }
+.class-buttons .btn { font-size: 24px; padding: 0.7em 1.2em; display: flex; flex-direction: column; align-items: center; }
+.class-buttons .progress { font-size: 14px; font-weight: 400; }
+
+.reset-area { margin-top: 32px; text-align: right; }
+.list-btn { margin-top: 16px; font-size: 20px; }
+.file-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+.file-actions .btn { font-size: 18px; }
+
+/* ---------- 結果一覧（1画面に収まるように） ---------- */
+.list {
+  height: 100vh;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  padding: 2vh 2vw 1.5vh;
+  overflow: hidden;
+}
+.list-head { display: flex; align-items: baseline; gap: 2vw; flex-wrap: wrap; }
+.list-head h1 { margin: 0; font-size: clamp(20px, min(4vh, 3.4vw), 40px); }
+.list-date { color: var(--muted); font-size: clamp(12px, min(2vh, 1.8vw), 20px); }
+.list-head .back-link { margin-left: auto; }
+.list-grid {
+  --rows: 9;
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.6vw;
+  margin-top: 1.5vh;
+  /* 行数に合わせて文字の大きさを決める */
+  font-size: min(calc((100dvh - 12vh) / (var(--rows) + 1.6) * 0.44), 2.6vw);
+}
+.list-col {
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  padding: 0.4em 0.6em;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+.list-col h2 {
+  margin: 0 0 0.2em;
+  font-size: 1.15em;
+  text-align: center;
+  color: #fff;
+  background: var(--accent);
+  border-radius: 8px;
+  padding: 0.15em 0;
+}
+.list-col ol {
+  list-style: none; margin: 0; padding: 0; flex: 1; min-height: 0;
+  display: grid;
+  grid-template-rows: repeat(var(--rows), minmax(0, 1fr)); /* 3クラスの行の高さをそろえる */
+}
+.list-col li {
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+  border-bottom: 1px solid #e6e6e6;
+  font-weight: 700;
+  line-height: 1.2;
+}
+.list-col li:last-child { border-bottom: none; }
+.list-col .tag { display: inline-block; margin-left: 0.5em; font-size: 0.55em; font-weight: 400;
+  color: #999; white-space: nowrap; vertical-align: middle; }
+.list-col .g { flex: none; width: 2.6em; color: var(--muted); font-weight: 400; }
+.list-col .n { min-width: 0; overflow-wrap: anywhere; }
+.list-col .n.long { font-size: 0.72em; }
+.list-col li.not-drawn .n { color: #555; font-weight: 400; }
+.list-note { margin: 0.8vh 0 0; color: var(--muted); font-size: clamp(11px, 1.6vh, 16px); }
+@media (max-width: 600px) {
+  .list { height: auto; overflow: visible; }
+  .list-grid { grid-template-columns: 1fr; font-size: 18px; }
+}
+
+/* ---------- くじ画面 ---------- */
+.lottery {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  padding: 12px 16px 20px;
+}
+.back-link {
+  align-self: flex-start;
+  font: inherit;
+  font-size: 14px;
+  color: #999;
+  background: none;
+  border: 1px solid #e3e3e3;
+  border-radius: 8px;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+.stage {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 2vh;
+}
+.state { display: flex; flex-direction: column; align-items: center; gap: 4vh; }
+.lot-class { font-size: clamp(24px, 5vh, 48px); font-weight: 700; margin: 0; color: var(--muted); }
+.lot-group { font-size: clamp(56px, min(18vh, 30vw), 200px); font-weight: 800; margin: 0; line-height: 1.1; }
+
+.btn.draw {
+  font-size: clamp(32px, min(7vh, 10vw), 72px);
+  padding: 0.5em 1.4em;
+  border-radius: 24px;
+  border-width: 4px;
+  background: var(--accent);
+  color: #fff;
+  box-shadow: 0 6px 0 var(--accent-dark);
+}
+.btn.draw:hover:not(:disabled) { background: var(--accent-dark); }
+.btn.draw:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--accent-dark); }
+
+.wait { font-size: clamp(40px, 11vh, 120px); font-weight: 700; margin: 0; color: var(--muted); }
+.wait .dots { display: inline-block; animation: blink 0.6s steps(2, start) infinite; }
+@keyframes blink { to { visibility: hidden; } }
+
+.result-lead { font-size: clamp(24px, min(7vh, 8vw), 72px); font-weight: 700; margin: 0; }
+.result-name {
+  /* --len（文字数）に合わせて、画面からはみ出さない大きさにする */
+  --len: 6;
+  font-size: min(20vh, calc(90vw / var(--len)));
+  font-weight: 800;
+  margin: 0;
+  line-height: 1.15;
+  color: var(--accent);
+  word-break: break-all;
+  animation: pop 0.35s ease-out;
+}
+@keyframes pop {
+  from { opacity: 0; transform: scale(0.85); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.lot-nav { display: flex; justify-content: space-between; gap: 16px; }
+.btn.nav { font-size: clamp(18px, min(3.6vh, 5vw), 34px); padding: 0.5em 1.1em; }
+
+@media (max-width: 600px) {
+  .setup { font-size: 16px; }
+  .setup h1 { font-size: 22px; }
+  .counts { gap: 16px; font-size: 18px; }
+  .group-row { font-size: 18px; }
+  .btn.nav { flex: 1; }
+}

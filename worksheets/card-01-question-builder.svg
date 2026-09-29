@@ -1,0 +1,106 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1200" viewBox="0 0 1600 1200">
+<rect width="1600" height="1200" fill="#ffffff"/>
+<rect x="40" y="32" width="340" height="96" rx="12" fill="#fff" stroke="#1f5fae" stroke-width="3" />
+<text x="54" y="58" font-family="'Hiragino Sans','Hiragino Kaku Gothic ProN','BIZ UDPGothic','Yu Gothic','Meiryo','Noto Sans JP',sans-serif" font-size="20" font-weight="400" fill="#6b6b6b" text-anchor="start" >先生の名前</text>
+<text x="396" y="103" font-family="'Hiragino Sans','Hiragino Kaku Gothic ProN','BIZ UDPGothic','Yu Gothic','Meiryo','Noto Sans JP',sans-serif" font-size="58" font-weight="800" fill="#222222" text-anchor="start" >先生に、どんなことを聞こう？</text>
+<text x="42" y="172" font-family="'Hiragino Sans','Hiragino Kaku Gothic ProN','BIZ UDPGothic','Yu Gothic','Meiryo','Noto Sans JP',sans-serif" font-size="30" font-weight="400" fill="#6b6b6b" text-anchor="start" >その先生のことを、もっと知るための質問を考えよう。</text>
+<rect x="118" y="200" width="322" height="74" rx="14" fill="#1f5fae" stroke="#1f5fae" stroke-width="2" />
+<text x="132" y="236" font-family="'Hiragino Sans','Hiragino Kaku Gothic ProN','BIZ UDPGothic','Yu Gothic','Meiryo','Noto Sans JP',sans-serif" font-size="23" font-weight="700" fill="#fff" text-anchor="start" >① 何ができるか聞きたい？</text>
+<text x="170" y="264" font-family="'Hiragino Sans','Hiragino Kaku Gothic ProN','BIZ UDPGothic','Yu Gothic','Meiryo','Noto Sans JP',sans-serif" font-size="20" font-weight="400" fill="#dfe9f7" text-anchor="start" >日本語で考えよう</text>
+<rect x="484" y="200" width="316" height="74" rx="14" fill="#1f5fae" stroke="#1f5fae" stroke-width="2" />
+<text x="498" y="236" font-family="'Hiragino Sans','Hiragino Kaku Gothic ProN','BIZ UDPGothic','Yu Gothic','Meiryo','Noto Sans JP',sans-serif" font-size="23" font-weight="700" fill="#fff" text-anchor="start" >② 「〇〇する」は英語で？</text>
+<text x="536" y="264" font-family="'Hiragino Sans','Hiragino Kaku Gothic ProN','BIZ UDPGothic','Yu Gothic','Meiryo','Noto Sans JP',sans-serif" font-size="20" font-weight="400" fill="#dfe9f7" text-anchor="start" >動作を英語に</text>
+<rect x="846" y="200" width="374" height="74" rx="14" fill="#1f5fae" stroke="#1f5fae" stroke-width="2" />
+<text x="860" y="236" font-family="'Hiragino Sans','Hiragino Kaku Gothic ProN','BIZ UDPGothic','Yu Gothic','Meiryo','Noto Sans JP',sans-serif" font-size="23" font-weight="700" fill="#fff" text-anchor="start" >③ 質問にしよう！</text>
+<text x="898" y="264" font-family="'Hiragino Sans','Hiragino Kaku Gothic ProN','BIZ UDPGothic','Yu Gothic','Meiryo','Noto Sans JP',sans-serif" font-size="20" font-weight="400" fill="#dfe9f7" text-anchor="start" >Can you ...?</text>
+<path d="M444,230.0 h20 v-9 l16,16 l-16,16 v-9 h-20 z" fill="#1f5fae"/>
+<path d="M804,230.0 h20 v-9 l16,16 l-16,16 v-9 h-20 z" fill="#1f5fae"/>
+<rect x="40" y="286" width="1180" height="84" rx="14" fill="#f4f5f7" stroke="#dcdcdc" stroke-width="2" />
+<text x="75.0" y="340" font-family="'Hiragino Sans','Hiragino Kaku Gothic ProN','BIZ UDPGothic','Yu Gothic','Meiryo','Noto Sans JP',sans-serif" font-size="30" font-weight="800" fill="#6b6b6b" text-anchor="middle" >例</text>
+<text x="132" y="340" font-family="'Hiragino Sans','Hiragino Kaku Gothic ProN','BIZ UDPGothic','Yu Gothic','Meiryo','Noto Sans JP',sans-serif" font-size="28" font-weight="700" fill="#222222" text-anchor="start" >「野球ができるかな？」</text>
+<text x="498" y="340" font-family="'Hiragino Sans','Hiragino Kaku Gothic ProN','BIZ UDPGothic','Yu Gothic','Meiryo','Noto Sans JP',sans-serif" font-size="32" font-weight="700" fill="#1f5fae" text-anchor="start" >play baseball</text>
+<text x="860" y="340" font-family="'Hiragino Sans','Hiragino Kaku Gothic ProN','BIZ UDPGothic','Yu Gothic','Meiryo','Noto Sans JP',sans-serif" font-size="28" font-weight="700" fill="#1f5fae" text-anchor="start" >Can you play baseball?</text>
+<path d="M444,321.0 h20 v-9 l16,16 l-16,16 v-9 h-20 z" fill="#9bb6dc"/>
+<path d="M804,321.0 h20 v-9 l16,16 l-16,16 v-9 h-20 z" fill="#9bb6dc"/>
+<circle cx="75.0" cy="477.0" r="32" fill="#eaf1fb" stroke="#1f5fae" stroke-width="2"/>
+<text x="75.0" y="489.0" font-family="'Hiragino Sans','Hiragino Kaku Gothic ProN','BIZ UDPGothic','Yu Gothic','Meiryo','Noto Sans JP',sans-serif" font-size="32" font-weight="800" fill="#1f5fae" text-anchor="middle" >Q1</text>
+<rect x="118" y="386" width="322" height="182" rx="16" fill="#fff" stroke="#9a9a9a" stroke-width="2" />
+<text x="132" y="426" font-family="'Hiragino Sans','Hiragino Kaku Gothic ProN','BIZ UDPGothic','Yu Gothic','Meiryo','Noto Sans JP',sans-serif" font-size="32" font-weight="400" fill="#b5b5b5" text-anchor="start" >「</text>
+<text x="426" y="550" font-family="'Hiragino Sans','Hiragino Kaku Gothic ProN','BIZ UDPGothic','Yu Gothic','Meiryo','Noto Sans JP',sans-serif" font-size="32" font-weight="400" fill="#b5b5b5" text-anchor="end" >」</text>
+<rect x="484" y="386" width="316" height="182" rx="16" fill="#fff" stroke="#9a9a9a" stroke-width="2" />
+<rect x="846" y="386" width="374" height="182" rx="16" fill="#fbfcfe" stroke="#1f5fae" stroke-width="2" />
+<text x="864" y="442" font-family="'Hiragino Sans','Hiragino Kaku Gothic ProN','BIZ UDPGothic','Yu Gothic','Meiryo','Noto Sans JP',sans-serif" font-size="36" font-weight="700" fill="#1f5fae" text-anchor="start" >Can you</text>
+<line x1="866" y1="532" x2="1168" y2="532" stroke="#9a9a9a" stroke-width="3" />
+<text x="1198" y="528" font-family="'Hiragino Sans','Hiragino Kaku Gothic ProN','BIZ UDPGothic','Yu Gothic','Meiryo','Noto Sans JP',sans-serif" font-size="44" font-weight="800" fill="#1f5fae" text-anchor="middle" >?</text>
+<path d="M444,470.0 h20 v-9 l16,16 l-16,16 v-9 h-20 z" fill="#c9d6ea"/>
+<path d="M804,470.0 h20 v-9 l16,16 l-16,16 v-9 h-20 z" fill="#c9d6ea"/>
+<circle cx="75.0" cy="673.0" r="32" fill="#eaf1fb" stroke="#1f5fae" stroke-width="2"/>
+<text x="75.0" y="685.0" font-family="'Hiragino Sans','Hiragino Kaku Gothic ProN','BIZ UDPGothic','Yu Gothic','Meiryo','Noto Sans JP',sans-serif" font-size="32" font-weight="800" fill="#1f5fae" text-anchor="middle" >Q2</text>
+<rect x="118" y="582" width="322" height="182" rx="16" fill="#fff" stroke="#9a9a9a" stroke-width="2" />
+<text x="132" y="622" font-family="'Hiragino Sans','Hiragino Kaku Gothic ProN','BIZ UDPGothic','Yu Gothic','Meiryo','Noto Sans JP',sans-serif" font-size="32" font-weight="400" fill="#b5b5b5" text-anchor="start" >「</text>
+<text x="426" y="746" font-family="'Hiragino Sans','Hiragino Kaku Gothic ProN','BIZ UDPGothic','Yu Gothic','Meiryo','Noto Sans JP',sans-serif" font-size="32" font-weight="400" fill="#b5b5b5" text-anchor="end" >」</text>
+<rect x="484" y="582" width="316" height="182" rx="16" fill="#fff" stroke="#9a9a9a" stroke-width="2" />
+<rect x="846" y="582" width="374" height="182" rx="16" fill="#fbfcfe" stroke="#1f5fae" stroke-width="2" />
+<text x="864" y="638" font-family="'Hiragino Sans','Hiragino Kaku Gothic ProN','BIZ UDPGothic','Yu Gothic','Meiryo','Noto Sans JP',sans-serif" font-size="36" font-weight="700" fill="#1f5fae" text-anchor="start" >Can you</text>
+<line x1="866" y1="728" x2="1168" y2="728" stroke="#9a9a9a" stroke-width="3" />
+<text x="1198" y="724" font-family="'Hiragino Sans','Hiragino Kaku Gothic ProN','BIZ UDPGothic','Yu Gothic','Meiryo','Noto Sans JP',sans-serif" font-size="44" font-weight="800" fill="#1f5fae" text-anchor="middle" >?</text>
+<path d="M444,666.0 h20 v-9 l16,16 l-16,16 v-9 h-20 z" fill="#c9d6ea"/>
+<path d="M804,666.0 h20 v-9 l16,16 l-16,16 v-9 h-20 z" fill="#c9d6ea"/>
+<circle cx="75.0" cy="869.0" r="32" fill="#eaf1fb" stroke="#1f5fae" stroke-width="2"/>
+<text x="75.0" y="881.0" font-family="'Hiragino Sans','Hiragino Kaku Gothic ProN','BIZ UDPGothic','Yu Gothic','Meiryo','Noto Sans JP',sans-serif" font-size="32" font-weight="800" fill="#1f5fae" text-anchor="middle" >Q3</text>
+<rect x="118" y="778" width="322" height="182" rx="16" fill="#fff" stroke="#9a9a9a" stroke-width="2" />
+<text x="132" y="818" font-family="'Hiragino Sans','Hiragino Kaku Gothic ProN','BIZ UDPGothic','Yu Gothic','Meiryo','Noto Sans JP',sans-serif" font-size="32" font-weight="400" fill="#b5b5b5" text-anchor="start" >「</text>
+<text x="426" y="942" font-family="'Hiragino Sans','Hiragino Kaku Gothic ProN','BIZ UDPGothic','Yu Gothic','Meiryo','Noto Sans JP',sans-serif" font-size="32" font-weight="400" fill="#b5b5b5" text-anchor="end" >」</text>
+<rect x="484" y="778" width="316" height="182" rx="16" fill="#fff" stroke="#9a9a9a" stroke-width="2" />
+<rect x="846" y="778" width="374" height="182" rx="16" fill="#fbfcfe" stroke="#1f5fae" stroke-width="2" />
+<text x="864" y="834" font-family="'Hiragino Sans','Hiragino Kaku Gothic ProN','BIZ UDPGothic','Yu Gothic','Meiryo','Noto Sans JP',sans-serif" font-size="36" font-weight="700" fill="#1f5fae" text-anchor="start" >Can you</text>
+<line x1="866" y1="924" x2="1168" y2="924" stroke="#9a9a9a" stroke-width="3" />
+<text x="1198" y="920" font-family="'Hiragino Sans','Hiragino Kaku Gothic ProN','BIZ UDPGothic','Yu Gothic','Meiryo','Noto Sans JP',sans-serif" font-size="44" font-weight="800" fill="#1f5fae" text-anchor="middle" >?</text>
+<path d="M444,862.0 h20 v-9 l16,16 l-16,16 v-9 h-20 z" fill="#c9d6ea"/>
+<path d="M804,862.0 h20 v-9 l16,16 l-16,16 v-9 h-20 z" fill="#c9d6ea"/>
+<circle cx="75.0" cy="1065.0" r="32" fill="#eaf1fb" stroke="#1f5fae" stroke-width="2"/>
+<text x="75.0" y="1077.0" font-family="'Hiragino Sans','Hiragino Kaku Gothic ProN','BIZ UDPGothic','Yu Gothic','Meiryo','Noto Sans JP',sans-serif" font-size="32" font-weight="800" fill="#1f5fae" text-anchor="middle" >Q4</text>
+<rect x="118" y="974" width="322" height="182" rx="16" fill="#fff" stroke="#9a9a9a" stroke-width="2" />
+<text x="132" y="1014" font-family="'Hiragino Sans','Hiragino Kaku Gothic ProN','BIZ UDPGothic','Yu Gothic','Meiryo','Noto Sans JP',sans-serif" font-size="32" font-weight="400" fill="#b5b5b5" text-anchor="start" >「</text>
+<text x="426" y="1138" font-family="'Hiragino Sans','Hiragino Kaku Gothic ProN','BIZ UDPGothic','Yu Gothic','Meiryo','Noto Sans JP',sans-serif" font-size="32" font-weight="400" fill="#b5b5b5" text-anchor="end" >」</text>
+<rect x="484" y="974" width="316" height="182" rx="16" fill="#fff" stroke="#9a9a9a" stroke-width="2" />
+<rect x="846" y="974" width="374" height="182" rx="16" fill="#fbfcfe" stroke="#1f5fae" stroke-width="2" />
+<text x="864" y="1030" font-family="'Hiragino Sans','Hiragino Kaku Gothic ProN','BIZ UDPGothic','Yu Gothic','Meiryo','Noto Sans JP',sans-serif" font-size="36" font-weight="700" fill="#1f5fae" text-anchor="start" >Can you</text>
+<line x1="866" y1="1120" x2="1168" y2="1120" stroke="#9a9a9a" stroke-width="3" />
+<text x="1198" y="1116" font-family="'Hiragino Sans','Hiragino Kaku Gothic ProN','BIZ UDPGothic','Yu Gothic','Meiryo','Noto Sans JP',sans-serif" font-size="44" font-weight="800" fill="#1f5fae" text-anchor="middle" >?</text>
+<path d="M444,1058.0 h20 v-9 l16,16 l-16,16 v-9 h-20 z" fill="#c9d6ea"/>
+<path d="M804,1058.0 h20 v-9 l16,16 l-16,16 v-9 h-20 z" fill="#c9d6ea"/>
+<rect x="1252" y="200" width="308" height="964" rx="18" fill="#fffaf0" stroke="#e8c98a" stroke-width="2" />
+<text x="1276" y="256" font-family="'Hiragino Sans','Hiragino Kaku Gothic ProN','BIZ UDPGothic','Yu Gothic','Meiryo','Noto Sans JP',sans-serif" font-size="40" font-weight="800" fill="#a86b00" text-anchor="start" >Idea</text>
+<text x="1384" y="254" font-family="'Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji',sans-serif" font-size="34" font-weight="400" fill="#222222" text-anchor="start" >💡</text>
+<text x="1276" y="298" font-family="'Hiragino Sans','Hiragino Kaku Gothic ProN','BIZ UDPGothic','Yu Gothic','Meiryo','Noto Sans JP',sans-serif" font-size="24" font-weight="700" fill="#222222" text-anchor="start" >いろいろな種類の</text>
+<text x="1276" y="330" font-family="'Hiragino Sans','Hiragino Kaku Gothic ProN','BIZ UDPGothic','Yu Gothic','Meiryo','Noto Sans JP',sans-serif" font-size="24" font-weight="700" fill="#222222" text-anchor="start" >質問を考えてみよう！</text>
+<line x1="1270" y1="358" x2="1542" y2="358" stroke="#ecd9b0" stroke-width="2" />
+<text x="1276" y="420" font-family="'Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji',sans-serif" font-size="38" font-weight="400" fill="#222222" text-anchor="start" >⚾</text>
+<text x="1332" y="406" font-family="'Hiragino Sans','Hiragino Kaku Gothic ProN','BIZ UDPGothic','Yu Gothic','Meiryo','Noto Sans JP',sans-serif" font-size="27" font-weight="700" fill="#222222" text-anchor="start" >Sports</text>
+<text x="1332" y="442" font-family="'Hiragino Sans','Hiragino Kaku Gothic ProN','BIZ UDPGothic','Yu Gothic','Meiryo','Noto Sans JP',sans-serif" font-size="23" font-weight="400" fill="#6b6b6b" text-anchor="start" >スポーツ</text>
+<line x1="1270" y1="470" x2="1542" y2="470" stroke="#ecd9b0" stroke-width="2" />
+<text x="1276" y="532" font-family="'Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji',sans-serif" font-size="38" font-weight="400" fill="#222222" text-anchor="start" >🎵</text>
+<text x="1332" y="518" font-family="'Hiragino Sans','Hiragino Kaku Gothic ProN','BIZ UDPGothic','Yu Gothic','Meiryo','Noto Sans JP',sans-serif" font-size="27" font-weight="700" fill="#222222" text-anchor="start" >Music</text>
+<text x="1332" y="554" font-family="'Hiragino Sans','Hiragino Kaku Gothic ProN','BIZ UDPGothic','Yu Gothic','Meiryo','Noto Sans JP',sans-serif" font-size="23" font-weight="400" fill="#6b6b6b" text-anchor="start" >音楽</text>
+<line x1="1270" y1="582" x2="1542" y2="582" stroke="#ecd9b0" stroke-width="2" />
+<text x="1276" y="644" font-family="'Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji',sans-serif" font-size="38" font-weight="400" fill="#222222" text-anchor="start" >🍳</text>
+<text x="1332" y="630" font-family="'Hiragino Sans','Hiragino Kaku Gothic ProN','BIZ UDPGothic','Yu Gothic','Meiryo','Noto Sans JP',sans-serif" font-size="24" font-weight="700" fill="#222222" text-anchor="start" >Food / Cooking</text>
+<text x="1332" y="666" font-family="'Hiragino Sans','Hiragino Kaku Gothic ProN','BIZ UDPGothic','Yu Gothic','Meiryo','Noto Sans JP',sans-serif" font-size="23" font-weight="400" fill="#6b6b6b" text-anchor="start" >食べ物・料理</text>
+<line x1="1270" y1="694" x2="1542" y2="694" stroke="#ecd9b0" stroke-width="2" />
+<text x="1276" y="756" font-family="'Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji',sans-serif" font-size="38" font-weight="400" fill="#222222" text-anchor="start" >🎨</text>
+<text x="1332" y="742" font-family="'Hiragino Sans','Hiragino Kaku Gothic ProN','BIZ UDPGothic','Yu Gothic','Meiryo','Noto Sans JP',sans-serif" font-size="27" font-weight="700" fill="#222222" text-anchor="start" >Hobbies</text>
+<text x="1332" y="778" font-family="'Hiragino Sans','Hiragino Kaku Gothic ProN','BIZ UDPGothic','Yu Gothic','Meiryo','Noto Sans JP',sans-serif" font-size="23" font-weight="400" fill="#6b6b6b" text-anchor="start" >趣味</text>
+<line x1="1270" y1="806" x2="1542" y2="806" stroke="#ecd9b0" stroke-width="2" />
+<text x="1276" y="868" font-family="'Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji',sans-serif" font-size="38" font-weight="400" fill="#222222" text-anchor="start" >💬</text>
+<text x="1332" y="854" font-family="'Hiragino Sans','Hiragino Kaku Gothic ProN','BIZ UDPGothic','Yu Gothic','Meiryo','Noto Sans JP',sans-serif" font-size="27" font-weight="700" fill="#222222" text-anchor="start" >Languages</text>
+<text x="1332" y="890" font-family="'Hiragino Sans','Hiragino Kaku Gothic ProN','BIZ UDPGothic','Yu Gothic','Meiryo','Noto Sans JP',sans-serif" font-size="23" font-weight="400" fill="#6b6b6b" text-anchor="start" >ことば</text>
+<line x1="1270" y1="918" x2="1542" y2="918" stroke="#ecd9b0" stroke-width="2" />
+<text x="1276" y="980" font-family="'Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji',sans-serif" font-size="38" font-weight="400" fill="#222222" text-anchor="start" >🏫</text>
+<text x="1332" y="966" font-family="'Hiragino Sans','Hiragino Kaku Gothic ProN','BIZ UDPGothic','Yu Gothic','Meiryo','Noto Sans JP',sans-serif" font-size="27" font-weight="700" fill="#222222" text-anchor="start" >School</text>
+<text x="1332" y="1002" font-family="'Hiragino Sans','Hiragino Kaku Gothic ProN','BIZ UDPGothic','Yu Gothic','Meiryo','Noto Sans JP',sans-serif" font-size="23" font-weight="400" fill="#6b6b6b" text-anchor="start" >学校</text>
+<line x1="1270" y1="1030" x2="1542" y2="1030" stroke="#ecd9b0" stroke-width="2" />
+<text x="1276" y="1092" font-family="'Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji',sans-serif" font-size="38" font-weight="400" fill="#222222" text-anchor="start" >⭐</text>
+<text x="1332" y="1078" font-family="'Hiragino Sans','Hiragino Kaku Gothic ProN','BIZ UDPGothic','Yu Gothic','Meiryo','Noto Sans JP',sans-serif" font-size="24" font-weight="700" fill="#222222" text-anchor="start" >Special question</text>
+<text x="1332" y="1114" font-family="'Hiragino Sans','Hiragino Kaku Gothic ProN','BIZ UDPGothic','Yu Gothic','Meiryo','Noto Sans JP',sans-serif" font-size="23" font-weight="400" fill="#6b6b6b" text-anchor="start" >その先生ならでは！</text>
+</svg>

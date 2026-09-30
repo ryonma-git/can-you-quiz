@@ -158,7 +158,8 @@
         used.push(from + "カテゴリの先生" + n + "人");
       });
       warnings.push(r + "カテゴリの先生が" + (total[r] - take[r]) + "人足りません → " +
-        used.join("と") + "で代わりに割り当てます");
+        used.join("と") + "で代わりに割り当てます" +
+        (borrow[r].C ? "（Cの先生が2人以上になるクラスが出ます。teachers.csv で A・B の先生を増やすのがおすすめです）" : ""));
     });
     return { take: take, borrow: borrow, warnings: warnings, errors: errors };
   }
@@ -200,10 +201,14 @@
 
     // 枠をクラスに配る。1班目から順にクラスを交互に回るので、
     // 補充した先生（枠の最後）は特定のクラスに偏らない
+    // クラスの順番はカテゴリごとにずらして回す（補充の先生が同じクラスに重ならないように）
     var picked = {};
     classes.forEach(function (cls) { picked[cls.id] = []; });
+    var base = shuffle(classes, rng);
+    var start = 0;
     CATEGORIES.forEach(function (r) {
-      var order = shuffle(classes, rng);
+      var order = base.slice(start).concat(base.slice(0, start));
+      start = (start + slots[r].length) % base.length;
       var list = slots[r];
       for (var round = 0; list.length && round < 1000; round++) {
         order.forEach(function (cls) {
@@ -220,6 +225,42 @@
     return { ok: true, assignment: assignment, warnings: plan.warnings };
   }
 
+  // まだどの班にも割り当てられていない先生を数える（引き直し用）
+  // excluded: 引き直しで外した先生（もう一度選ばれないようにする）
+  function remainingTeachers(teachers, assignment, excluded) {
+    var used = {};
+    Object.keys(assignment || {}).forEach(function (id) {
+      (assignment[id] || []).forEach(function (n) { used[n] = true; });
+    });
+    (excluded || []).forEach(function (n) { used[n] = true; });
+    return teachers.filter(function (t) { return !used[t.name]; });
+  }
+
+  // 選んだ班の先生を、残っている先生の中から選び直す
+  //   indexes: 班の番号(0始まり)の配列、categories: 選んでよいカテゴリ（例 ["A","B"]）
+  // 戻り値: { ok: true, assignment: 新しい割当, changes: [{index, from, to}] }
+  //      または { ok: false, errors: [...] }
+  function redraw(teachers, assignment, excluded, classId, indexes, categories, rng) {
+    rng = rng || Math.random;
+    if (!indexes.length) return { ok: false, errors: ["引き直す班を選んでください。"] };
+    var pool = remainingTeachers(teachers, assignment, excluded).filter(function (t) {
+      return categories.indexOf(t.category) !== -1;
+    });
+    if (pool.length < indexes.length) {
+      return { ok: false, errors: ["残っている先生（" + categories.join("・") + "）が" + pool.length +
+        "人しかいないため、" + indexes.length + "班分を引き直せません。"] };
+    }
+    pool = shuffle(pool, rng);
+    var next = {};
+    Object.keys(assignment).forEach(function (id) { next[id] = assignment[id].slice(); });
+    var changes = indexes.map(function (i, k) {
+      var from = next[classId][i];
+      next[classId][i] = pool[k].name;
+      return { index: i, from: from, to: pool[k].name };
+    });
+    return { ok: true, assignment: next, changes: changes };
+  }
+
   var api = {
     CATEGORIES: CATEGORIES,
     parseTeachersCsv: parseTeachersCsv,
@@ -228,6 +269,8 @@
     planShortages: planShortages,
     shuffle: shuffle,
     buildAssignment: buildAssignment,
+    remainingTeachers: remainingTeachers,
+    redraw: redraw,
   };
 
   if (typeof module !== "undefined" && module.exports) {

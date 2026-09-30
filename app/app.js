@@ -22,7 +22,9 @@
       assignment: null,        // { classId: ["先生名", ...] }（班順）
       revealed: {},            // { classId: [true/false, ...] }
       createdAt: null,
-      teachers: [],            // 割当を作ったときの先生データ（保存ファイル用）
+      teachers: [],            // 割当を作ったときの先生データ（保存ファイル・引き直し用）
+      excluded: [],            // 引き直しで外した先生（もう選ばない）
+      redrawLog: [],           // 引き直しの記録
       view: "setup",           // "setup" | "lottery" | "list"
       currentClass: CONFIG.classes[0].id,
       currentGroup: {},        // { classId: 班の番号(0始まり) }
@@ -54,6 +56,8 @@
     if (!CONFIG.classes.some(function (c) { return c.id === s.currentClass; })) {
       s.currentClass = CONFIG.classes[0].id;
     }
+    if (!Array.isArray(s.excluded)) s.excluded = [];
+    if (!Array.isArray(s.redrawLog)) s.redrawLog = [];
     if (!s.assignment) s.view = "setup";
     return s;
   }
@@ -228,6 +232,7 @@
       ? "クラスを選ぶと、くじの画面になります。"
       : "先に「割当を作成」をしてください。";
     $("btn-list").disabled = !state.assignment;
+    renderRedraw();
     $("btn-save-file").disabled = !state.assignment;
   }
 
@@ -250,6 +255,8 @@
     });
     state.createdAt = new Date().toISOString();
     state.teachers = csv.teachers.slice();
+    state.excluded = [];
+    state.redrawLog = [];
     saveState();
     renderSetup();
   }
@@ -328,6 +335,8 @@
       currentClass: state.currentClass,
       createdAt: state.createdAt,
       teachers: state.teachers,
+      excluded: state.excluded,
+      redrawLog: state.redrawLog,
     };
     var name = "先生くじ保存_" + d.getFullYear() + pad2(d.getMonth() + 1) + pad2(d.getDate()) +
       "_" + pad2(d.getHours()) + pad2(d.getMinutes()) + ".json";
@@ -372,10 +381,12 @@
         "今の抽選結果は、この内容に置きかわります。よろしいですか？";
       if (!confirm(msg)) return;
       var s2 = defaultState();
-      ["groups", "assignment", "revealed", "currentGroup", "currentClass", "createdAt", "teachers"].forEach(function (k) {
+      ["groups", "assignment", "revealed", "currentGroup", "currentClass", "createdAt", "teachers", "excluded", "redrawLog"].forEach(function (k) {
         if (data[k] !== undefined) s2[k] = data[k];
       });
       state = s2;
+      if (!Array.isArray(state.excluded)) state.excluded = [];
+      if (!Array.isArray(state.redrawLog)) state.redrawLog = [];
       if (Array.isArray(state.teachers) && state.teachers.length) {
         csv = { loaded: true, teachers: state.teachers, errors: [], source: "保存ファイルの先生データ " };
       }
@@ -388,6 +399,118 @@
   });
 
   $("btn-save-file").addEventListener("click", saveToFile);
+
+  // ---------------- 班の先生を引き直す ----------------
+  var redrawClass = null;
+
+  // 引き直しに使う先生データ
+  //   teachers.csv を読み込み直していればそれを使う（カテゴリの変更や先生の追加を反映できる）。
+  //   読み込んでいなければ、割当作成時（または保存ファイル）の先生データを使う。
+  function csvUsable() {
+    return csv.loaded && !csv.errors.length && csv.teachers.length > 0;
+  }
+  function redrawTeachers() {
+    if (csvUsable()) return csv.teachers;
+    return Array.isArray(state.teachers) ? state.teachers : [];
+  }
+
+  function redrawCategories() {
+    var v = (document.querySelector('input[name="redraw-cat"]:checked') || {}).value || "AB";
+    return v.split("");
+  }
+
+  function renderRedraw() {
+    var panel = $("redraw-panel");
+    panel.hidden = !state.assignment;
+    if (!state.assignment) return;
+    var teachers = redrawTeachers();
+    var catOf = {};
+    teachers.forEach(function (t) { catOf[t.name] = t.category; });
+
+    var sel = $("redraw-class");
+    if (!redrawClass) redrawClass = CONFIG.classes[0].id;
+    if (!sel.options.length) {
+      CONFIG.classes.forEach(function (c) {
+        var o = document.createElement("option");
+        o.value = c.id;
+        o.textContent = c.name;
+        sel.appendChild(o);
+      });
+    }
+    sel.value = redrawClass;
+
+    var rest = L.countByCategory(L.remainingTeachers(teachers, state.assignment, state.excluded));
+    $("redraw-remaining").textContent = teachers.length
+      ? "残っている先生：A " + rest.A + "人・B " + rest.B + "人・C " + rest.C + "人" +
+        "（" + (csvUsable() ? "読み込んだ " + csv.source.trim() : "割当を作ったときの先生データ") + "）"
+      : "先生データがありません。上の「teachers.csv を選ぶ」で読み込んでください。";
+
+    var ul = $("redraw-groups");
+    ul.innerHTML = "";
+    (state.assignment[redrawClass] || []).forEach(function (name, i) {
+      var li = document.createElement("li");
+      var label = document.createElement("label");
+      var cb = document.createElement("input");
+      cb.type = "checkbox";
+      cb.value = i;
+      var g = document.createElement("span");
+      g.className = "g";
+      g.textContent = (i + 1) + "班";
+      var n = document.createElement("span");
+      n.className = "n";
+      n.textContent = name;
+      var cat = document.createElement("span");
+      var c = catOf[name] || "?";
+      cat.className = "cat cat-" + c;
+      cat.textContent = c;
+      label.appendChild(cb);
+      label.appendChild(g);
+      label.appendChild(n);
+      label.appendChild(cat);
+      if ((state.revealed[redrawClass] || [])[i]) {
+        var d = document.createElement("span");
+        d.className = "done";
+        d.textContent = "くじ済";
+        label.appendChild(d);
+      }
+      li.appendChild(label);
+      ul.appendChild(li);
+    });
+    $("btn-redraw").disabled = !teachers.length;
+  }
+
+  $("redraw-class").addEventListener("change", function (e) {
+    redrawClass = e.target.value;
+    setErrors($("redraw-errors"), []);
+    $("redraw-status").textContent = "";
+    renderRedraw();
+  });
+
+  $("btn-redraw").addEventListener("click", function () {
+    var indexes = Array.prototype.map.call(
+      document.querySelectorAll("#redraw-groups input:checked"),
+      function (cb) { return Number(cb.value); });
+    var cats = redrawCategories();
+    var result = L.redraw(redrawTeachers(), state.assignment, state.excluded, redrawClass, indexes, cats);
+    if (!result.ok) { setErrors($("redraw-errors"), result.errors); return; }
+    setErrors($("redraw-errors"), []);
+    var groupsText = indexes.map(function (i) { return (i + 1) + "班"; }).join("・");
+    if (!confirm(classLabel(redrawClass) + " の " + groupsText + " の先生を引き直します。\n" +
+        "引き直した班は「くじ前」に戻ります。よろしいですか？")) return;
+    var now = new Date().toISOString();
+    result.changes.forEach(function (ch) {
+      state.excluded.push(ch.from);
+      state.revealed[redrawClass][ch.index] = false;
+      state.redrawLog.push({ classId: redrawClass, group: ch.index + 1, from: ch.from, to: ch.to, at: now });
+    });
+    state.assignment = result.assignment;
+    state.teachers = redrawTeachers().slice(); // 保存ファイルにも最新の先生データを残す
+    saveState();
+    renderSetup();
+    // 新しい先生の名前はここでは出さない（くじ画面で発表するため）
+    $("redraw-status").textContent = classLabel(redrawClass) + " の " + groupsText +
+      " を引き直しました。くじ画面でもう一度くじを引いてください。";
+  });
 
   // ================================================================
   //  結果一覧（スクリーンショット用）

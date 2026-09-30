@@ -237,26 +237,29 @@
   }
 
   // 選んだ班の先生を、残っている先生の中から選び直す
-  //   indexes: 班の番号(0始まり)の配列、categories: 選んでよいカテゴリ（例 ["A","B"]）
+  //   indexes: 班の番号(0始まり)の配列
+  //   A・B の先生から選ぶ。A・B が足りないときだけ、足りない分を C から選ぶ。
   // 戻り値: { ok: true, assignment: 新しい割当, changes: [{index, from, to}] }
   //      または { ok: false, errors: [...] }
-  function redraw(teachers, assignment, excluded, classId, indexes, categories, rng) {
+  function redraw(teachers, assignment, excluded, classId, indexes, rng) {
     rng = rng || Math.random;
     if (!indexes.length) return { ok: false, errors: ["引き直す班を選んでください。"] };
-    var pool = remainingTeachers(teachers, assignment, excluded).filter(function (t) {
-      return categories.indexOf(t.category) !== -1;
-    });
+    var rest = remainingTeachers(teachers, assignment, excluded);
+    var first = shuffle(rest.filter(function (t) { return t.category !== "C"; }), rng);
+    var second = shuffle(rest.filter(function (t) { return t.category === "C"; }), rng);
+    var pool = first.concat(second);
     if (pool.length < indexes.length) {
-      return { ok: false, errors: ["残っている先生（" + categories.join("・") + "）が" + pool.length +
-        "人しかいないため、" + indexes.length + "班分を引き直せません。"] };
+      return { ok: false, errors: ["残っている先生が" + pool.length + "人しかいないため、" +
+        indexes.length + "班分を引き直せません。"] };
     }
-    pool = shuffle(pool, rng);
+    // 選ばれた先生を班にランダムに配る
+    var picked = shuffle(pool.slice(0, indexes.length), rng);
     var next = {};
     Object.keys(assignment).forEach(function (id) { next[id] = assignment[id].slice(); });
     var changes = indexes.map(function (i, k) {
       var from = next[classId][i];
-      next[classId][i] = pool[k].name;
-      return { index: i, from: from, to: pool[k].name };
+      next[classId][i] = picked[k].name;
+      return { index: i, from: from, to: picked[k].name };
     });
     return { ok: true, assignment: next, changes: changes };
   }

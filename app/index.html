@@ -60,7 +60,7 @@
 
     <div class="panel" id="redraw-panel" hidden>
       <h2>班の先生を引き直す</h2>
-      <p class="muted">選んだ班の先生を、まだどの班にも割り当てられていない先生の中から選び直します。
+      <p class="muted">選んだ班の先生を、まだどの班にも割り当てられていない先生の中から自動で選び直します。
         引き直した班は「くじ前」に戻るので、くじ画面でもう一度くじを引けます。</p>
       <div class="redraw-row">
         <label>クラス
@@ -69,13 +69,6 @@
         <span id="redraw-remaining" class="redraw-remaining"></span>
       </div>
       <ul id="redraw-groups" class="redraw-groups"></ul>
-      <div class="redraw-row">
-        <span>どの先生から選ぶ？</span>
-        <label><input type="radio" name="redraw-cat" value="AB" checked> A・B（おすすめ）</label>
-        <label><input type="radio" name="redraw-cat" value="A"> A だけ</label>
-        <label><input type="radio" name="redraw-cat" value="B"> B だけ</label>
-        <label><input type="radio" name="redraw-cat" value="ABC"> すべて</label>
-      </div>
       <ul id="redraw-errors" class="error-box" hidden></ul>
       <button id="btn-redraw" class="btn primary">選んだ班を引き直す</button>
       <p id="redraw-status" class="csv-status ok"></p>

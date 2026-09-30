@@ -154,36 +154,34 @@ test("その他: 見出し行の誤り・文字化け(Shift_JIS)を知らせる"
   assert.ok(L.parseTeachersCsv("").errors[0].includes("空"));
 });
 
-test("引き直し: 残っている先生（A・B）から選び、外した先生は二度と選ばれない", () => {
+test("引き直し: A・Bから自動で選び、A・Bがいないときだけ C。外した先生は二度と選ばれない", () => {
   const p = L.parseTeachersCsv(read("../data/teachers.sample.csv")); // A21 B10 C5
   const byName = Object.fromEntries(p.teachers.map((t) => [t.name, t.category]));
-  const g = groups(9, 9, 9);
-  const res = L.buildAssignment(p.teachers, CONFIG.classes, g, CONFIG.categoryTable);
+  const res = L.buildAssignment(p.teachers, CONFIG.classes, groups(9, 9, 9), CONFIG.categoryTable);
   let assignment = res.assignment;
   let excluded = [];
   const before = JSON.stringify(assignment);
-  // 5年3組の1班と2班を引き直す
-  const r1 = L.redraw(p.teachers, assignment, excluded, "5-3", [0, 1], ["A", "B"]);
+  // 残り: A3 B4 C2（A21-18, B10-6, C5-3）
+  const r1 = L.redraw(p.teachers, assignment, excluded, "5-3", [0, 1]);
   assert.ok(r1.ok, JSON.stringify(r1.errors));
   assert.strictEqual(JSON.stringify(assignment), before, "元の割当が変わってしまった");
-  r1.changes.forEach((ch) => {
-    assert.ok(["A", "B"].includes(byName[ch.to]), "A・B以外が選ばれた");
-    assert.notStrictEqual(ch.from, ch.to);
-  });
+  r1.changes.forEach((ch) => assert.ok(["A", "B"].includes(byName[ch.to]), "A・Bが残っているのにCが選ばれた"));
   assert.deepStrictEqual(r1.assignment["5-1"], assignment["5-1"], "他クラスが変わった");
   assert.deepStrictEqual(r1.assignment["5-3"].slice(2), assignment["5-3"].slice(2), "選んでいない班が変わった");
   excluded = excluded.concat(r1.changes.map((c) => c.from));
   assignment = r1.assignment;
-  const all = Object.values(assignment).flat();
-  assert.strictEqual(new Set(all).size, all.length, "重複あり");
-  // 残り A・B を全部使い切るまで引き直し → 外した先生は出てこない
-  const rest = L.remainingTeachers(p.teachers, assignment, excluded).filter((t) => t.category !== "C").length;
-  // A21+B10=31, 使用 A18+B6=24, 引き直しで2人使用 → 残り5人
-  assert.strictEqual(rest, 5);
-  const r2 = L.redraw(p.teachers, assignment, excluded, "5-1", [0, 1, 2, 3, 4], ["A", "B"]);
-  assert.ok(r2.ok);
+  // 残り A・B は5人。6班分引き直すと 5人がA・B、1人だけ C
+  const r2 = L.redraw(p.teachers, assignment, excluded, "5-1", [0, 1, 2, 3, 4, 5]);
+  assert.ok(r2.ok, JSON.stringify(r2.errors));
+  const cats = r2.changes.map((ch) => byName[ch.to]);
+  assert.strictEqual(cats.filter((c) => c === "C").length, 1, "C の人数: " + cats.join(""));
   r2.changes.forEach((ch) => assert.ok(!excluded.includes(ch.to), "外した先生が再登場"));
-  const r3 = L.redraw(p.teachers, r2.assignment, excluded.concat(r2.changes.map((c) => c.from)), "5-2", [0], ["A", "B"]);
+  const all = Object.values(r2.assignment).flat();
+  assert.strictEqual(new Set(all).size, all.length, "重複あり");
+  // 残りが足りないとき
+  const ex2 = excluded.concat(r2.changes.map((c) => c.from));
+  const left = L.remainingTeachers(p.teachers, r2.assignment, ex2).length;
+  const r3 = L.redraw(p.teachers, r2.assignment, ex2, "5-2", [0, 1, 2, 3, 4, 5, 6, 7, 8].slice(0, left + 1));
   assert.strictEqual(r3.ok, false);
   console.log("   不足時:", r3.errors[0]);
 });

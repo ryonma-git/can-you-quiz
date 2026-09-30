@@ -414,18 +414,11 @@
     return Array.isArray(state.teachers) ? state.teachers : [];
   }
 
-  function redrawCategories() {
-    var v = (document.querySelector('input[name="redraw-cat"]:checked') || {}).value || "AB";
-    return v.split("");
-  }
-
   function renderRedraw() {
     var panel = $("redraw-panel");
     panel.hidden = !state.assignment;
     if (!state.assignment) return;
     var teachers = redrawTeachers();
-    var catOf = {};
-    teachers.forEach(function (t) { catOf[t.name] = t.category; });
 
     var sel = $("redraw-class");
     if (!redrawClass) redrawClass = CONFIG.classes[0].id;
@@ -439,9 +432,9 @@
     }
     sel.value = redrawClass;
 
-    var rest = L.countByCategory(L.remainingTeachers(teachers, state.assignment, state.excluded));
+    var rest = L.remainingTeachers(teachers, state.assignment, state.excluded).length;
     $("redraw-remaining").textContent = teachers.length
-      ? "残っている先生：A " + rest.A + "人・B " + rest.B + "人・C " + rest.C + "人" +
+      ? "残っている先生：" + rest + "人" +
         "（" + (csvUsable() ? "読み込んだ " + csv.source.trim() : "割当を作ったときの先生データ") + "）"
       : "先生データがありません。上の「teachers.csv を選ぶ」で読み込んでください。";
 
@@ -459,14 +452,9 @@
       var n = document.createElement("span");
       n.className = "n";
       n.textContent = name;
-      var cat = document.createElement("span");
-      var c = catOf[name] || "?";
-      cat.className = "cat cat-" + c;
-      cat.textContent = c;
       label.appendChild(cb);
       label.appendChild(g);
       label.appendChild(n);
-      label.appendChild(cat);
       if ((state.revealed[redrawClass] || [])[i]) {
         var d = document.createElement("span");
         d.className = "done";
@@ -490,8 +478,7 @@
     var indexes = Array.prototype.map.call(
       document.querySelectorAll("#redraw-groups input:checked"),
       function (cb) { return Number(cb.value); });
-    var cats = redrawCategories();
-    var result = L.redraw(redrawTeachers(), state.assignment, state.excluded, redrawClass, indexes, cats);
+    var result = L.redraw(redrawTeachers(), state.assignment, state.excluded, redrawClass, indexes);
     if (!result.ok) { setErrors($("redraw-errors"), result.errors); return; }
     setErrors($("redraw-errors"), []);
     var groupsText = indexes.map(function (i) { return (i + 1) + "班"; }).join("・");

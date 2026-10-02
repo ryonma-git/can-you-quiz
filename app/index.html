@@ -60,18 +60,23 @@
 
     <div class="panel" id="redraw-panel" hidden>
       <h2>班の先生を引き直す</h2>
-      <p class="muted">選んだ班の先生を、まだどの班にも割り当てられていない先生の中から自動で選び直します。
-        引き直した班は「くじ前」に戻るので、くじ画面でもう一度くじを引けます。</p>
-      <div class="redraw-row">
-        <label>クラス
-          <select id="redraw-class" class="redraw-select"></select>
-        </label>
-        <span id="redraw-remaining" class="redraw-remaining"></span>
-      </div>
-      <ul id="redraw-groups" class="redraw-groups"></ul>
-      <ul id="redraw-errors" class="error-box" hidden></ul>
-      <button id="btn-redraw" class="btn primary">選んだ班を引き直す</button>
+      <p class="muted">一部の班だけ、先生を選び直すことができます。ほかの班の結果は変わりません。</p>
+      <button id="btn-redraw-toggle" class="btn small-btn">引き直しを開く</button>
       <p id="redraw-status" class="csv-status ok"></p>
+      <!-- 開くまでは先生名を表示しない -->
+      <div id="redraw-body" hidden>
+        <p class="muted">選んだ班の先生を、まだどの班にも割り当てられていない先生の中から自動で選び直します。
+          引き直した班は「くじ前」に戻るので、くじ画面でもう一度くじを引けます。</p>
+        <div class="redraw-row">
+          <label>クラス
+            <select id="redraw-class" class="redraw-select"></select>
+          </label>
+          <span id="redraw-remaining" class="redraw-remaining"></span>
+        </div>
+        <ul id="redraw-groups" class="redraw-groups"></ul>
+        <ul id="redraw-errors" class="error-box" hidden></ul>
+        <button id="btn-redraw" class="btn primary">選んだ班を引き直す</button>
+      </div>
     </div>
 
     <div class="panel">

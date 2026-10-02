@@ -85,6 +85,7 @@
     $("lottery").hidden = view !== "lottery";
     $("list").hidden = view !== "list";
     if (view === "setup") {
+      redrawOpen = false;
       renderSetup();
       if (!csv.loaded) loadCsvFromServer();
     } else if (view === "list") {
@@ -402,6 +403,18 @@
 
   // ---------------- 班の先生を引き直す ----------------
   var redrawClass = null;
+  var redrawOpen = false; // 引き直し欄は、ボタンを押すまで閉じておく（先生名が見えないように）
+
+  function setRedrawOpen(open) {
+    redrawOpen = open;
+    renderRedraw();
+  }
+
+  // 引き直したあと、まだくじを引いていない班か（新しい先生名を隠すため）
+  function isRedrawnHidden(classId, i) {
+    if ((state.revealed[classId] || [])[i]) return false;
+    return state.redrawLog.some(function (r) { return r.classId === classId && r.group === i + 1; });
+  }
 
   // 引き直しに使う先生データ
   //   teachers.csv を読み込み直していればそれを使う（カテゴリの変更や先生の追加を反映できる）。
@@ -418,6 +431,9 @@
     var panel = $("redraw-panel");
     panel.hidden = !state.assignment;
     if (!state.assignment) return;
+    $("redraw-body").hidden = !redrawOpen;
+    $("btn-redraw-toggle").textContent = redrawOpen ? "引き直しを閉じる" : "引き直しを開く";
+    if (!redrawOpen) { $("redraw-groups").innerHTML = ""; return; }
     var teachers = redrawTeachers();
 
     var sel = $("redraw-class");
@@ -451,14 +467,17 @@
       g.textContent = (i + 1) + "班";
       var n = document.createElement("span");
       n.className = "n";
-      n.textContent = name;
+      // 引き直し済みでくじ前の班は、新しい先生名を出さない（くじ画面で発表するため）
+      var hiddenName = isRedrawnHidden(redrawClass, i);
+      n.textContent = hiddenName ? "？？？" : name;
       label.appendChild(cb);
       label.appendChild(g);
       label.appendChild(n);
-      if ((state.revealed[redrawClass] || [])[i]) {
+      var mark = (state.revealed[redrawClass] || [])[i] ? "くじ済" : (hiddenName ? "引き直し済" : "");
+      if (mark) {
         var d = document.createElement("span");
         d.className = "done";
-        d.textContent = "くじ済";
+        d.textContent = mark;
         label.appendChild(d);
       }
       li.appendChild(label);
@@ -472,6 +491,12 @@
     setErrors($("redraw-errors"), []);
     $("redraw-status").textContent = "";
     renderRedraw();
+  });
+
+  $("btn-redraw-toggle").addEventListener("click", function () {
+    $("redraw-status").textContent = "";
+    setErrors($("redraw-errors"), []);
+    setRedrawOpen(!redrawOpen);
   });
 
   $("btn-redraw").addEventListener("click", function () {
@@ -493,6 +518,7 @@
     state.assignment = result.assignment;
     state.teachers = redrawTeachers().slice(); // 保存ファイルにも最新の先生データを残す
     saveState();
+    redrawOpen = false; // 引き直したら欄を閉じる
     renderSetup();
     // 新しい先生の名前はここでは出さない（くじ画面で発表するため）
     $("redraw-status").textContent = classLabel(redrawClass) + " の " + groupsText +

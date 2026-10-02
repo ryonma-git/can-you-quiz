@@ -245,10 +245,46 @@ def card3():
     return svg(b)
 
 
+# ------------------------------------------------------------------
+# Card 4  班とメンバー
+# ------------------------------------------------------------------
+def card4():
+    b = []
+    b.append(t(40, 112, "Our Group", 76, 800, ACCENT))
+    b.append(t(530, 108, "わたしたちの班", 56, 800))
+
+    # 組・班
+    y, h = 170, 190
+    b.append(rect(40, y, 1520, h, r=20, fill=ACCENT_BG, stroke=ACCENT, sw=3))
+    base = y + 128
+    b.append(t(90, base, "5年", 84, 800))
+    b.append(rect(270, y + 28, 260, h - 56, r=14, fill="#fff", stroke=ACCENT, sw=3))
+    b.append(t(552, base, "組", 84, 800))
+    b.append(rect(800, y + 28, 300, h - 56, r=14, fill="#fff", stroke=ACCENT, sw=3))
+    b.append(t(1122, base, "班", 84, 800))
+    b.append(t(1250, base - 8, "Group", 44, 700, MUTED))
+
+    # メンバー
+    b.append(t(40, 428, "Members", 44, 800, ACCENT))
+    b.append(t(300, 426, "メンバーの名前を書こう", 32, 400, MUTED))
+    top, rowh, gap = 456, 222, 16
+    colw, colgap = 752, 16
+    for i in range(6):
+        col, row = i % 2, i // 2
+        x = 40 + col * (colw + colgap)
+        yy = top + row * (rowh + gap)
+        b.append(rect(x, yy, colw, rowh, r=18, fill="#fff", stroke="#c9c9c9"))
+        b.append(f'<circle cx="{x + 70}" cy="{yy + rowh / 2}" r="38" fill="{ACCENT}"/>')
+        b.append(t(x + 70, yy + rowh / 2 + 15, str(i + 1), 42, 800, "#fff", "middle"))
+        b.append(line(x + 136, yy + rowh - 56, x + colw - 36, yy + rowh - 56, LINE, 3))
+    return svg(b)
+
+
 if __name__ == "__main__":
     OUT.mkdir(exist_ok=True)
     for name, fn in [("card-01-question-builder", card1),
                      ("card-02-interview", card2),
-                     ("card-03-quiz-maker", card3)]:
+                     ("card-03-quiz-maker", card3),
+                     ("card-04-group-members", card4)]:
         (OUT / f"{name}.svg").write_text(fn(), encoding="utf-8")
         print("wrote", OUT / f"{name}.svg")

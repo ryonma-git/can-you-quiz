@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1200" viewBox="0 0 1600 1200">
+<rect width="1600" height="1200" fill="#ffffff"/>
+<text x="40" y="112" font-family="'Hiragino Sans','Hiragino Kaku Gothic ProN','BIZ UDPGothic','Yu Gothic','Meiryo','Noto Sans JP',sans-serif" font-size="76" font-weight="800" fill="#1f5fae" text-anchor="start" >Our Group</text>
+<text x="530" y="108" font-family="'Hiragino Sans','Hiragino Kaku Gothic ProN','BIZ UDPGothic','Yu Gothic','Meiryo','Noto Sans JP',sans-serif" font-size="56" font-weight="800" fill="#222222" text-anchor="start" >わたしたちの班</text>
+<rect x="40" y="170" width="1520" height="190" rx="20" fill="#eaf1fb" stroke="#1f5fae" stroke-width="3" />
+<text x="90" y="298" font-family="'Hiragino Sans','Hiragino Kaku Gothic ProN','BIZ UDPGothic','Yu Gothic','Meiryo','Noto Sans JP',sans-serif" font-size="84" font-weight="800" fill="#222222" text-anchor="start" >5年</text>
+<rect x="270" y="198" width="260" height="134" rx="14" fill="#fff" stroke="#1f5fae" stroke-width="3" />
+<text x="552" y="298" font-family="'Hiragino Sans','Hiragino Kaku Gothic ProN','BIZ UDPGothic','Yu Gothic','Meiryo','Noto Sans JP',sans-serif" font-size="84" font-weight="800" fill="#222222" text-anchor="start" >組</text>
+<rect x="800" y="198" width="300" height="134" rx="14" fill="#fff" stroke="#1f5fae" stroke-width="3" />
+<text x="1122" y="298" font-family="'Hiragino Sans','Hiragino Kaku Gothic ProN','BIZ UDPGothic','Yu Gothic','Meiryo','Noto Sans JP',sans-serif" font-size="84" font-weight="800" fill="#222222" text-anchor="start" >班</text>
+<text x="1250" y="290" font-family="'Hiragino Sans','Hiragino Kaku Gothic ProN','BIZ UDPGothic','Yu Gothic','Meiryo','Noto Sans JP',sans-serif" font-size="44" font-weight="700" fill="#6b6b6b" text-anchor="start" >Group</text>
+<text x="40" y="428" font-family="'Hiragino Sans','Hiragino Kaku Gothic ProN','BIZ UDPGothic','Yu Gothic','Meiryo','Noto Sans JP',sans-serif" font-size="44" font-weight="800" fill="#1f5fae" text-anchor="start" >Members</text>
+<text x="300" y="426" font-family="'Hiragino Sans','Hiragino Kaku Gothic ProN','BIZ UDPGothic','Yu Gothic','Meiryo','Noto Sans JP',sans-serif" font-size="32" font-weight="400" fill="#6b6b6b" text-anchor="start" >メンバーの名前を書こう</text>
+<rect x="40" y="456" width="752" height="222" rx="18" fill="#fff" stroke="#c9c9c9" stroke-width="2" />
+<circle cx="110" cy="567.0" r="38" fill="#1f5fae"/>
+<text x="110" y="582.0" font-family="'Hiragino Sans','Hiragino Kaku Gothic ProN','BIZ UDPGothic','Yu Gothic','Meiryo','Noto Sans JP',sans-serif" font-size="42" font-weight="800" fill="#fff" text-anchor="middle" >1</text>
+<line x1="176" y1="622" x2="756" y2="622" stroke="#9a9a9a" stroke-width="3" />
+<rect x="808" y="456" width="752" height="222" rx="18" fill="#fff" stroke="#c9c9c9" stroke-width="2" />
+<circle cx="878" cy="567.0" r="38" fill="#1f5fae"/>
+<text x="878" y="582.0" font-family="'Hiragino Sans','Hiragino Kaku Gothic ProN','BIZ UDPGothic','Yu Gothic','Meiryo','Noto Sans JP',sans-serif" font-size="42" font-weight="800" fill="#fff" text-anchor="middle" >2</text>
+<line x1="944" y1="622" x2="1524" y2="622" stroke="#9a9a9a" stroke-width="3" />
+<rect x="40" y="694" width="752" height="222" rx="18" fill="#fff" stroke="#c9c9c9" stroke-width="2" />
+<circle cx="110" cy="805.0" r="38" fill="#1f5fae"/>
+<text x="110" y="820.0" font-family="'Hiragino Sans','Hiragino Kaku Gothic ProN','BIZ UDPGothic','Yu Gothic','Meiryo','Noto Sans JP',sans-serif" font-size="42" font-weight="800" fill="#fff" text-anchor="middle" >3</text>
+<line x1="176" y1="860" x2="756" y2="860" stroke="#9a9a9a" stroke-width="3" />
+<rect x="808" y="694" width="752" height="222" rx="18" fill="#fff" stroke="#c9c9c9" stroke-width="2" />
+<circle cx="878" cy="805.0" r="38" fill="#1f5fae"/>
+<text x="878" y="820.0" font-family="'Hiragino Sans','Hiragino Kaku Gothic ProN','BIZ UDPGothic','Yu Gothic','Meiryo','Noto Sans JP',sans-serif" font-size="42" font-weight="800" fill="#fff" text-anchor="middle" >4</text>
+<line x1="944" y1="860" x2="1524" y2="860" stroke="#9a9a9a" stroke-width="3" />
+<rect x="40" y="932" width="752" height="222" rx="18" fill="#fff" stroke="#c9c9c9" stroke-width="2" />
+<circle cx="110" cy="1043.0" r="38" fill="#1f5fae"/>
+<text x="110" y="1058.0" font-family="'Hiragino Sans','Hiragino Kaku Gothic ProN','BIZ UDPGothic','Yu Gothic','Meiryo','Noto Sans JP',sans-serif" font-size="42" font-weight="800" fill="#fff" text-anchor="middle" >5</text>
+<line x1="176" y1="1098" x2="756" y2="1098" stroke="#9a9a9a" stroke-width="3" />
+<rect x="808" y="932" width="752" height="222" rx="18" fill="#fff" stroke="#c9c9c9" stroke-width="2" />
+<circle cx="878" cy="1043.0" r="38" fill="#1f5fae"/>
+<text x="878" y="1058.0" font-family="'Hiragino Sans','Hiragino Kaku Gothic ProN','BIZ UDPGothic','Yu Gothic','Meiryo','Noto Sans JP',sans-serif" font-size="42" font-weight="800" fill="#fff" text-anchor="middle" >6</text>
+<line x1="944" y1="1098" x2="1524" y2="1098" stroke="#9a9a9a" stroke-width="3" />
+</svg>

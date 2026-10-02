@@ -109,6 +109,7 @@ A+B+C の合計が班数と同じになるようにしてください。
 | `card-01-question-builder.png` | 質問を考えよう（日本語 → 英語 → Can you ...?） |
 | `card-02-interview.png` | Interview（Q1〜Q4、Yes / No に○） |
 | `card-03-quiz-maker.png` | Mystery Teacher Quiz（He / She can / can't） |
+| `card-04-group-members.png`（PDF もあり） | Our Group（5年＿組＿班、メンバー6人まで） |
 
 ---
 

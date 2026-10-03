@@ -84,8 +84,9 @@
     $("setup").hidden = view !== "setup";
     $("lottery").hidden = view !== "lottery";
     $("list").hidden = view !== "list";
+    // 準備画面・くじ画面に来たら、管理メニューは閉じ、くじ前の結果は表示しない状態に戻す
+    if (view !== "list") { redrawOpen = false; showHidden = false; }
     if (view === "setup") {
-      redrawOpen = false;
       renderSetup();
       if (!csv.loaded) loadCsvFromServer();
     } else if (view === "list") {
@@ -403,24 +404,46 @@
 
   // ---------------- 班の先生を引き直す ----------------
   var redrawClass = null;
-  var redrawOpen = false; // 引き直し欄は、ボタンを押すまで閉じておく（先生名が見えないように）
+  var redrawOpen = false; // 管理メニューは、ボタンを押すまで閉じておく
+  var showHidden = false; // まだくじを引いていない班の結果を表示するか（保存しない。毎回 表示しない から始まる）
 
   function setRedrawOpen(open) {
     redrawOpen = open;
     renderRedraw();
   }
 
-  // 引き直したあと、まだくじを引いていない班か（新しい先生名を隠すため）
-  function isRedrawnHidden(classId, i) {
-    if ((state.revealed[classId] || [])[i]) return false;
+  // 先生名を見せてよい班か（くじ済み、または管理メニューで「表示する」にしているとき）
+  function canShowName(classId, i) {
+    return showHidden || (state.revealed[classId] || [])[i] === true;
+  }
+  function wasRedrawn(classId, i) {
     return state.redrawLog.some(function (r) { return r.classId === classId && r.group === i + 1; });
   }
 
+  // カテゴリごとの人数を「A ○人・B ○人・C ○人」の形にする
+  function countsText(list) {
+    var c = L.countByCategory(list);
+    return "A " + c.A + "人・B " + c.B + "人・C " + c.C + "人";
+  }
+
   // 引き直しに使う先生データ
-  //   teachers.csv を読み込み直していればそれを使う（カテゴリの変更や先生の追加を反映できる）。
-  //   読み込んでいなければ、割当作成時（または保存ファイル）の先生データを使う。
-  function csvUsable() {
+  //   ふだんは、割当作成時（または保存ファイル）の先生データを使う。
+  //   teachers.csv を読み込み直していて、いま班に割り当てている先生が全員その中にいる場合だけ、
+  //   読み込んだ CSV を使う（カテゴリの変更や先生の追加を反映できる）。
+  //   名前が合わない CSV（別の名簿・ひな形など）は使わない。別の名簿から先生を選んでしまうため。
+  function csvLoadedOk() {
     return csv.loaded && !csv.errors.length && csv.teachers.length > 0;
+  }
+  function csvMatchesAssignment() {
+    if (!state.assignment) return false;
+    var names = {};
+    csv.teachers.forEach(function (t) { names[t.name] = true; });
+    return CONFIG.classes.every(function (c) {
+      return (state.assignment[c.id] || []).every(function (n) { return names[n]; });
+    });
+  }
+  function csvUsable() {
+    return csvLoadedOk() && csvMatchesAssignment();
   }
   function redrawTeachers() {
     if (csvUsable()) return csv.teachers;
@@ -432,9 +455,27 @@
     panel.hidden = !state.assignment;
     if (!state.assignment) return;
     $("redraw-body").hidden = !redrawOpen;
-    $("btn-redraw-toggle").textContent = redrawOpen ? "引き直しを閉じる" : "引き直しを開く";
+    $("btn-redraw-toggle").textContent = redrawOpen ? "管理メニューを閉じる" : "管理メニューを開く";
     if (!redrawOpen) { $("redraw-groups").innerHTML = ""; return; }
     var teachers = redrawTeachers();
+    $("chk-show-hidden").checked = showHidden;
+
+    // 先生用の内訳（「表示する」にしているときだけ）
+    var counts = $("admin-counts");
+    counts.hidden = !(showHidden && teachers.length);
+    if (!counts.hidden) {
+      var byName = {};
+      teachers.forEach(function (t) { byName[t.name] = t; });
+      var assigned = [], unknown = 0;
+      CONFIG.classes.forEach(function (c) {
+        (state.assignment[c.id] || []).forEach(function (n) {
+          if (byName[n]) assigned.push(byName[n]); else unknown++;
+        });
+      });
+      counts.textContent = "いま班に割り当てている先生：" + countsText(assigned) +
+        (unknown ? "（先生データにない名前 " + unknown + "人）" : "") +
+        "　／　残っている先生：" + countsText(L.remainingTeachers(teachers, state.assignment, state.excluded));
+    }
 
     var sel = $("redraw-class");
     if (!redrawClass) redrawClass = CONFIG.classes[0].id;
@@ -451,8 +492,9 @@
     var rest = L.remainingTeachers(teachers, state.assignment, state.excluded).length;
     $("redraw-remaining").textContent = teachers.length
       ? "残っている先生：" + rest + "人" +
-        "（" + (csvUsable() ? "読み込んだ " + csv.source.trim() : "割当を作ったときの先生データ") + "）"
-      : "先生データがありません。上の「teachers.csv を選ぶ」で読み込んでください。";
+        "（" + (csvUsable() ? "読み込んだ " + csv.source.trim() : "割当を作ったときの先生データ") + "）" +
+        (csvLoadedOk() && !csvUsable() ? "　※読み込んだ teachers.csv は、今の割当と先生名が合わないため使っていません。" : "")
+      : "先生データがありません。割当を作ったときと同じ teachers.csv を「teachers.csv を選ぶ」で読み込んでください。";
 
     var ul = $("redraw-groups");
     ul.innerHTML = "";
@@ -467,13 +509,15 @@
       g.textContent = (i + 1) + "班";
       var n = document.createElement("span");
       n.className = "n";
-      // 引き直し済みでくじ前の班は、新しい先生名を出さない（くじ画面で発表するため）
-      var hiddenName = isRedrawnHidden(redrawClass, i);
+      // くじ前の班の先生名は出さない（管理メニューで「表示する」にしたときだけ出す）
+      var hiddenName = !canShowName(redrawClass, i);
+      n.className = hiddenName ? "n masked" : "n";
       n.textContent = hiddenName ? "？？？" : name;
       label.appendChild(cb);
       label.appendChild(g);
       label.appendChild(n);
-      var mark = (state.revealed[redrawClass] || [])[i] ? "くじ済" : (hiddenName ? "引き直し済" : "");
+      var mark = (state.revealed[redrawClass] || [])[i] ? "くじ済"
+        : (wasRedrawn(redrawClass, i) ? "引き直し済・くじ前" : "くじ前");
       if (mark) {
         var d = document.createElement("span");
         d.className = "done";
@@ -496,7 +540,13 @@
   $("btn-redraw-toggle").addEventListener("click", function () {
     $("redraw-status").textContent = "";
     setErrors($("redraw-errors"), []);
+    if (redrawOpen) showHidden = false; // 閉じるときは、くじ前の結果も表示しない状態に戻す
     setRedrawOpen(!redrawOpen);
+  });
+
+  $("chk-show-hidden").addEventListener("change", function (e) {
+    showHidden = e.target.checked;
+    renderRedraw();
   });
 
   $("btn-redraw").addEventListener("click", function () {
@@ -518,7 +568,8 @@
     state.assignment = result.assignment;
     state.teachers = redrawTeachers().slice(); // 保存ファイルにも最新の先生データを残す
     saveState();
-    redrawOpen = false; // 引き直したら欄を閉じる
+    redrawOpen = false; // 引き直したら管理メニューを閉じる
+    showHidden = false;
     renderSetup();
     // 新しい先生の名前はここでは出さない（くじ画面で発表するため）
     $("redraw-status").textContent = classLabel(redrawClass) + " の " + groupsText +
@@ -546,16 +597,17 @@
       var ol = document.createElement("ol");
       list.forEach(function (name, i) {
         var li = document.createElement("li");
-        if (!rev[i]) li.className = "not-drawn";
+        var masked = !canShowName(c.id, i); // くじ前の班は、管理メニューで「表示する」にしたときだけ名前を出す
+        if (!rev[i]) li.className = masked ? "not-drawn masked" : "not-drawn";
         var g = document.createElement("span");
         g.className = "g";
         g.textContent = (i + 1) + "班";
         var n = document.createElement("span");
-        n.className = name.length > 8 ? "n long" : "n"; // 長い名前は少し小さく
-        n.textContent = name;
+        n.className = !masked && name.length > 8 ? "n long" : "n"; // 長い名前は少し小さく
+        n.textContent = masked ? "（くじ前）" : name;
         li.appendChild(g);
         li.appendChild(n);
-        if (!rev[i]) {
+        if (!rev[i] && !masked) {
           var tag = document.createElement("span");
           tag.className = "tag";
           tag.textContent = "くじ前";
@@ -568,7 +620,9 @@
     });
     grid.style.setProperty("--rows", maxRows);
     var notDrawn = grid.querySelectorAll(".not-drawn").length;
-    $("list-note").textContent = notDrawn ? "「くじ前」＝まだくじを引いていない班（先生はこの表のとおりに決まっています）" : "";
+    $("list-note").textContent = !notDrawn ? ""
+      : showHidden ? "「くじ前」＝まだくじを引いていない班（先生はこの表のとおりに決まっています）"
+      : "まだくじを引いていない班の先生は表示していません（準備画面の「管理メニュー」で表示できます）";
   }
 
   $("btn-list-back").addEventListener("click", function () { showView("setup"); });

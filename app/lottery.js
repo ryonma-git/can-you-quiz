@@ -238,16 +238,17 @@
 
   // 選んだ班の先生を、残っている先生の中から選び直す
   //   indexes: 班の番号(0始まり)の配列
-  //   A・B の先生から選ぶ。A・B が足りないときだけ、足りない分を C から選ぶ。
+  //   できるだけ A の先生から選ぶ。A がいなくなったら B、B もいなくなったときだけ C。
   // 戻り値: { ok: true, assignment: 新しい割当, changes: [{index, from, to}] }
   //      または { ok: false, errors: [...] }
   function redraw(teachers, assignment, excluded, classId, indexes, rng) {
     rng = rng || Math.random;
     if (!indexes.length) return { ok: false, errors: ["引き直す班を選んでください。"] };
     var rest = remainingTeachers(teachers, assignment, excluded);
-    var first = shuffle(rest.filter(function (t) { return t.category !== "C"; }), rng);
-    var second = shuffle(rest.filter(function (t) { return t.category === "C"; }), rng);
-    var pool = first.concat(second);
+    var pool = [];
+    CATEGORIES.forEach(function (r) { // A → B → C の順に並べる（同じカテゴリの中はランダム）
+      pool = pool.concat(shuffle(rest.filter(function (t) { return t.category === r; }), rng));
+    });
     if (pool.length < indexes.length) {
       return { ok: false, errors: ["残っている先生が" + pool.length + "人しかいないため、" +
         indexes.length + "班分を引き直せません。"] };

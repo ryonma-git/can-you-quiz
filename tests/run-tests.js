@@ -154,7 +154,7 @@ test("その他: 見出し行の誤り・文字化け(Shift_JIS)を知らせる"
   assert.ok(L.parseTeachersCsv("").errors[0].includes("空"));
 });
 
-test("引き直し: A・Bから自動で選び、A・Bがいないときだけ C。外した先生は二度と選ばれない", () => {
+test("引き直し: できるだけ A から。A がいなくなったら B、B もいないときだけ C。外した先生は二度と選ばれない", () => {
   const p = L.parseTeachersCsv(read("../data/teachers.sample.csv")); // A21 B10 C5
   const byName = Object.fromEntries(p.teachers.map((t) => [t.name, t.category]));
   const res = L.buildAssignment(p.teachers, CONFIG.classes, groups(9, 9, 9), CONFIG.categoryTable);
@@ -165,16 +165,16 @@ test("引き直し: A・Bから自動で選び、A・Bがいないときだけ C
   const r1 = L.redraw(p.teachers, assignment, excluded, "5-3", [0, 1]);
   assert.ok(r1.ok, JSON.stringify(r1.errors));
   assert.strictEqual(JSON.stringify(assignment), before, "元の割当が変わってしまった");
-  r1.changes.forEach((ch) => assert.ok(["A", "B"].includes(byName[ch.to]), "A・Bが残っているのにCが選ばれた"));
+  r1.changes.forEach((ch) => assert.strictEqual(byName[ch.to], "A", "Aが残っているのにA以外が選ばれた"));
   assert.deepStrictEqual(r1.assignment["5-1"], assignment["5-1"], "他クラスが変わった");
   assert.deepStrictEqual(r1.assignment["5-3"].slice(2), assignment["5-3"].slice(2), "選んでいない班が変わった");
   excluded = excluded.concat(r1.changes.map((c) => c.from));
   assignment = r1.assignment;
-  // 残り A・B は5人。6班分引き直すと 5人がA・B、1人だけ C
+  // 残り A1 B4 C2。6班分 → A1人・B4人・C1人
   const r2 = L.redraw(p.teachers, assignment, excluded, "5-1", [0, 1, 2, 3, 4, 5]);
   assert.ok(r2.ok, JSON.stringify(r2.errors));
-  const cats = r2.changes.map((ch) => byName[ch.to]);
-  assert.strictEqual(cats.filter((c) => c === "C").length, 1, "C の人数: " + cats.join(""));
+  const cats = r2.changes.map((ch) => byName[ch.to]).sort().join("");
+  assert.strictEqual(cats, "ABBBBC", "選ばれたカテゴリ: " + cats);
   r2.changes.forEach((ch) => assert.ok(!excluded.includes(ch.to), "外した先生が再登場"));
   const all = Object.values(r2.assignment).flat();
   assert.strictEqual(new Set(all).size, all.length, "重複あり");
@@ -184,6 +184,30 @@ test("引き直し: A・Bから自動で選び、A・Bがいないときだけ C
   const r3 = L.redraw(p.teachers, r2.assignment, ex2, "5-2", [0, 1, 2, 3, 4, 5, 6, 7, 8].slice(0, left + 1));
   assert.strictEqual(r3.ok, false);
   console.log("   不足時:", r3.errors[0]);
+});
+
+test("引き直し: Aが残っているかぎり、何度やっても必ず A（3000回）", () => {
+  let n = 0;
+  for (let k = 0; k < 3000; k++) {
+    const a = 18 + (k % 6), b = 6 + (k % 5), c = 3 + (k % 6);
+    const t = [];
+    for (let i = 0; i < a; i++) t.push({ name: "A" + i, category: "A" });
+    for (let i = 0; i < b; i++) t.push({ name: "B" + i, category: "B" });
+    for (let i = 0; i < c; i++) t.push({ name: "C" + i, category: "C" });
+    const by = Object.fromEntries(t.map((x) => [x.name, x.category]));
+    let asg = L.buildAssignment(t, CONFIG.classes, groups(9, 9, 9), CONFIG.categoryTable).assignment;
+    let ex = [];
+    for (let step = 0; step < 4; step++) {
+      const rc = L.countByCategory(L.remainingTeachers(t, asg, ex));
+      const r = L.redraw(t, asg, ex, "5-3", [step]);
+      if (!r.ok) break;
+      const to = by[r.changes[0].to];
+      const expected = rc.A > 0 ? "A" : rc.B > 0 ? "B" : "C";
+      assert.strictEqual(to, expected, `残り A${rc.A} B${rc.B} C${rc.C} で ${to} が選ばれた`);
+      ex.push(r.changes[0].from); asg = r.assignment; n++;
+    }
+  }
+  console.log("   " + n + "回の引き直しで確認");
 });
 
 test("補充の先生がクラスに偏らない（A不足をCで補う場合も、Cは各クラス同じ人数）", () => {

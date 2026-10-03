@@ -113,6 +113,14 @@ p.error-box { padding-left: 14px; }
 .reset-area { margin-top: 32px; text-align: right; }
 .list-btn { margin-top: 16px; font-size: 20px; }
 
+/* 管理メニュー */
+.admin-check { display: flex; align-items: center; gap: 10px; font-weight: 700; margin: 14px 0 4px; cursor: pointer; }
+.admin-check input { width: 24px; height: 24px; flex: none; }
+.admin-counts { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 8px 12px; margin: 8px 0; font-size: 16px; }
+.admin-h3 { font-size: 18px; margin: 22px 0 6px; padding-top: 14px; border-top: 1px solid var(--line); }
+.redraw-groups .n.masked { color: #aaa; font-weight: 400; }
+.list-col li.masked .n { color: #b5b5b5; font-weight: 400; }
+
 /* 引き直し */
 .redraw-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 18px; margin: 10px 0; }
 .redraw-select { font: inherit; font-size: 20px; padding: 4px 8px; margin-left: 6px; }

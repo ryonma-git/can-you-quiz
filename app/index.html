@@ -59,12 +59,21 @@
     </div>
 
     <div class="panel" id="redraw-panel" hidden>
-      <h2>班の先生を引き直す</h2>
-      <p class="muted">一部の班だけ、先生を選び直すことができます。ほかの班の結果は変わりません。</p>
-      <button id="btn-redraw-toggle" class="btn small-btn">引き直しを開く</button>
+      <h2>管理メニュー <span class="muted small">先生用</span></h2>
+      <p class="muted">班の先生の引き直しや、まだくじを引いていない班の確認ができます。児童に画面を見せていないときに開いてください。</p>
+      <button id="btn-redraw-toggle" class="btn small-btn">管理メニューを開く</button>
       <p id="redraw-status" class="csv-status ok"></p>
-      <!-- 開くまでは先生名を表示しない -->
+      <!-- 開くまでは何も表示しない -->
       <div id="redraw-body" hidden>
+        <label class="admin-check">
+          <input type="checkbox" id="chk-show-hidden">
+          まだくじを引いていない班の結果を表示する
+        </label>
+        <p class="muted small">チェックしている間だけ、下の一覧と「結果一覧」に、くじ前の班の先生名が出ます。
+          準備画面を開き直す・くじ画面に行く・再読み込みすると、自動で表示しない状態に戻ります。</p>
+        <p id="admin-counts" class="admin-counts" hidden></p>
+
+        <h3 class="admin-h3">班の先生を引き直す</h3>
         <p class="muted">選んだ班の先生を、まだどの班にも割り当てられていない先生の中から自動で選び直します。
           引き直した班は「くじ前」に戻るので、くじ画面でもう一度くじを引けます。</p>
         <div class="redraw-row">

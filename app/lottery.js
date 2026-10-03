@@ -265,6 +265,53 @@
     return { ok: true, assignment: next, changes: changes };
   }
 
+  // ---- 先生をしぼって引き直す（ウィザード用） ----
+  // targets: [{classId, index}] 引き直す班
+  // 候補にできる先生 = 引き直さない班に割り当てられていない先生
+  //（引き直す班にいま入っている先生は、いったん空くので候補に入る）
+  function poolCandidates(teachers, assignment, targets) {
+    var isTarget = {};
+    targets.forEach(function (t) { isTarget[t.classId + ":" + t.index] = true; });
+    var kept = {};
+    Object.keys(assignment || {}).forEach(function (id) {
+      (assignment[id] || []).forEach(function (n, i) {
+        if (!isTarget[id + ":" + i]) kept[n] = true;
+      });
+    });
+    return teachers.filter(function (t) { return !kept[t.name]; });
+  }
+
+  // 選んだ先生（poolNames）の中から、引き直す班にランダムに割り当てる
+  // 戻り値: { ok: true, assignment, changes: [{classId, index, from, to}] } または { ok: false, errors }
+  function redrawFromPool(assignment, targets, poolNames, rng) {
+    rng = rng || Math.random;
+    if (!targets.length) return { ok: false, errors: ["引き直す班を選んでください。"] };
+    var uniq = poolNames.filter(function (n, i) { return poolNames.indexOf(n) === i; });
+    if (uniq.length < targets.length) {
+      return { ok: false, errors: ["先生を" + targets.length + "人以上選んでください（いま " + uniq.length + "人）。"] };
+    }
+    var isTarget = {};
+    targets.forEach(function (t) { isTarget[t.classId + ":" + t.index] = true; });
+    var clash = [];
+    Object.keys(assignment).forEach(function (id) {
+      assignment[id].forEach(function (n, i) {
+        if (!isTarget[id + ":" + i] && uniq.indexOf(n) !== -1) clash.push(n);
+      });
+    });
+    if (clash.length) {
+      return { ok: false, errors: ["すでにほかの班に決まっている先生が入っています：" + clash.join("・")] };
+    }
+    var picked = shuffle(uniq, rng).slice(0, targets.length);
+    var next = {};
+    Object.keys(assignment).forEach(function (id) { next[id] = assignment[id].slice(); });
+    var changes = targets.map(function (t, k) {
+      var from = next[t.classId][t.index];
+      next[t.classId][t.index] = picked[k];
+      return { classId: t.classId, index: t.index, from: from, to: picked[k] };
+    });
+    return { ok: true, assignment: next, changes: changes };
+  }
+
   var api = {
     CATEGORIES: CATEGORIES,
     parseTeachersCsv: parseTeachersCsv,
@@ -275,6 +322,8 @@
     buildAssignment: buildAssignment,
     remainingTeachers: remainingTeachers,
     redraw: redraw,
+    poolCandidates: poolCandidates,
+    redrawFromPool: redrawFromPool,
   };
 
   if (typeof module !== "undefined" && module.exports) {

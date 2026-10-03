@@ -86,6 +86,7 @@
     $("list").hidden = view !== "list";
     // 準備画面・くじ画面に来たら、管理メニューは閉じ、くじ前の結果は表示しない状態に戻す
     if (view !== "list") { redrawOpen = false; showHidden = false; }
+    $("wizard").hidden = true;
     if (view === "setup") {
       renderSetup();
       if (!csv.loaded) loadCsvFromServer();
@@ -528,6 +529,7 @@
       ul.appendChild(li);
     });
     $("btn-redraw").disabled = !teachers.length;
+    $("btn-wizard").disabled = !teachers.length;
   }
 
   $("redraw-class").addEventListener("change", function (e) {
@@ -574,6 +576,214 @@
     // 新しい先生の名前はここでは出さない（くじ画面で発表するため）
     $("redraw-status").textContent = classLabel(redrawClass) + " の " + groupsText +
       " を引き直しました。くじ画面でもう一度くじを引いてください。";
+  });
+
+  // ---------------- 先生をしぼって引き直す（ウィザード） ----------------
+  //   ① 引き直す班を選ぶ（くじ前の班は最初から選んである）
+  //   ② 出てくる可能性のある先生を選ぶ（①で選んだ班の数以上）
+  //   ③ 確認して実行（選んだ先生の中からランダムに割り当てる）
+  var wiz = { step: 1, targets: {}, pool: {} };
+
+  function wizTargets() {
+    var list = [];
+    CONFIG.classes.forEach(function (c) {
+      (state.assignment[c.id] || []).forEach(function (_, i) {
+        if (wiz.targets[c.id + ":" + i]) list.push({ classId: c.id, index: i });
+      });
+    });
+    return list;
+  }
+  function wizCandidates() {
+    return L.poolCandidates(redrawTeachers(), state.assignment, wizTargets());
+  }
+  function wizPoolNames() {
+    return wizCandidates().map(function (t) { return t.name; })
+      .filter(function (n) { return wiz.pool[n]; });
+  }
+
+  function openWizard() {
+    wiz = { step: 1, targets: {}, pool: {} };
+    CONFIG.classes.forEach(function (c) { // くじ前の班を最初から選んでおく
+      (state.assignment[c.id] || []).forEach(function (_, i) {
+        if (!(state.revealed[c.id] || [])[i]) wiz.targets[c.id + ":" + i] = true;
+      });
+    });
+    $("wizard").hidden = false;
+    renderWizard();
+  }
+  function closeWizard() {
+    $("wizard").hidden = true;
+    $("wiz-main").innerHTML = "";
+  }
+
+  function wizCheckItem(checked, onChange, parts) {
+    var li = document.createElement("li");
+    var label = document.createElement("label");
+    if (checked) label.className = "checked";
+    var cb = document.createElement("input");
+    cb.type = "checkbox";
+    cb.checked = checked;
+    cb.addEventListener("change", function () { onChange(cb.checked); });
+    label.appendChild(cb);
+    parts.forEach(function (pt) {
+      var sp = document.createElement("span");
+      sp.className = pt[0];
+      sp.textContent = pt[1];
+      label.appendChild(sp);
+    });
+    li.appendChild(label);
+    return li;
+  }
+  function wizToolButton(text, fn) {
+    var b = document.createElement("button");
+    b.className = "btn small-btn";
+    b.textContent = text;
+    b.addEventListener("click", fn);
+    $("wiz-tools").appendChild(b);
+  }
+
+  function renderWizard() {
+    var main = $("wiz-main");
+    main.innerHTML = "";
+    $("wiz-tools").innerHTML = "";
+    setErrors($("wiz-errors"), []);
+    [1, 2, 3].forEach(function (n) { $("wiz-s" + n).className = wiz.step === n ? "on" : ""; });
+    var targets = wizTargets();
+    var need = targets.length;
+    var count = $("wiz-count");
+    count.className = "wiz-count";
+    $("wiz-back").hidden = wiz.step === 1;
+
+    if (wiz.step === 1) {
+      $("wiz-title").textContent = "① 引き直す班を選ぶ";
+      $("wiz-lead").textContent = "まだくじを引いていない班は、最初から選んであります。" +
+        "くじ済みの班を選ぶと、その班は「くじ前」に戻ります。";
+      wizToolButton("くじ前の班だけ選ぶ", openWizard);
+      wizToolButton("すべて外す", function () { wiz.targets = {}; renderWizard(); });
+      CONFIG.classes.forEach(function (c) {
+        var h = document.createElement("h3");
+        h.textContent = c.name;
+        main.appendChild(h);
+        var ul = document.createElement("ul");
+        ul.className = "wiz-grid";
+        (state.assignment[c.id] || []).forEach(function (name, i) {
+          var key = c.id + ":" + i;
+          var drawn = (state.revealed[c.id] || [])[i] === true;
+          var show = canShowName(c.id, i);
+          ul.appendChild(wizCheckItem(!!wiz.targets[key], function (on) {
+            if (on) wiz.targets[key] = true; else delete wiz.targets[key];
+            renderWizard();
+          }, [["g", (i + 1) + "班"], [show ? "n" : "n masked", show ? name : "？？？"],
+              ["sub", drawn ? "くじ済" : "くじ前"]]));
+        });
+        main.appendChild(ul);
+      });
+      count.textContent = "選んだ班：" + need + "班";
+      $("wiz-next").textContent = "次へ";
+      $("wiz-next").disabled = need === 0;
+      return;
+    }
+
+    var candidates = wizCandidates();
+    var poolNames = wizPoolNames();
+
+    if (wiz.step === 2) {
+      $("wiz-title").textContent = "② 出てくる可能性のある先生を選ぶ";
+      $("wiz-lead").textContent = "ここで選んだ先生の中から、" + need + "班分をランダムに引き直します。" +
+        need + "人以上選んでください。（ほかの班にすでに決まっている先生は出てきません）";
+      wizToolButton("すべて選ぶ", function () {
+        candidates.forEach(function (t) { wiz.pool[t.name] = true; });
+        renderWizard();
+      });
+      wizToolButton("すべて外す", function () { wiz.pool = {}; renderWizard(); });
+      L.CATEGORIES.forEach(function (cat) {
+        var inCat = candidates.filter(function (t) { return t.category === cat; });
+        if (!inCat.length) return;
+        var h = document.createElement("h3");
+        h.textContent = cat + "（" + inCat.length + "人）";
+        main.appendChild(h);
+        var ul = document.createElement("ul");
+        ul.className = "wiz-grid";
+        inCat.forEach(function (t) {
+          var parts = [["n", t.name]];
+          if (state.excluded.indexOf(t.name) !== -1) parts.push(["sub", "以前外した先生"]);
+          ul.appendChild(wizCheckItem(!!wiz.pool[t.name], function (on) {
+            if (on) wiz.pool[t.name] = true; else delete wiz.pool[t.name];
+            renderWizard();
+          }, parts));
+        });
+        main.appendChild(ul);
+      });
+      if (!candidates.length) {
+        main.textContent = "選べる先生がいません。teachers.csv に先生を追加して読み込み直してください。";
+      }
+      count.textContent = "選んだ先生：" + poolNames.length + "人（最低 " + need + "人）";
+      if (poolNames.length < need) count.classList.add("ng");
+      $("wiz-next").textContent = "次へ";
+      $("wiz-next").disabled = poolNames.length < need;
+      return;
+    }
+
+    // ③ 確認
+    $("wiz-title").textContent = "③ 確認";
+    $("wiz-lead").textContent = "この内容で引き直します。どの班にどの先生が入るかは、くじ画面でくじを引くまで表示されません。";
+    var ul3 = document.createElement("ul");
+    ul3.className = "wiz-summary";
+    var byClass = CONFIG.classes.map(function (c) {
+      var gs = targets.filter(function (t) { return t.classId === c.id; })
+        .map(function (t) { return (t.index + 1) + "班"; });
+      return gs.length ? c.name + "：" + gs.join("・") : "";
+    }).filter(Boolean);
+    [["引き直す班（" + need + "班）", byClass.join("　／　")],
+     ["出てくる可能性のある先生（" + poolNames.length + "人）", poolNames.join("、")],
+     ["選ばれ方", "上の先生の中からランダムに " + need + "人が選ばれ、1人ずつ班に入ります。" +
+        (poolNames.length > need ? "（" + (poolNames.length - need) + "人は選ばれません）" : "（全員が選ばれます）")]
+    ].forEach(function (row) {
+      var li = document.createElement("li");
+      var b = document.createElement("b");
+      b.textContent = row[0] + "：";
+      li.appendChild(b);
+      li.appendChild(document.createTextNode(row[1]));
+      ul3.appendChild(li);
+    });
+    main.appendChild(ul3);
+    count.textContent = "";
+    $("wiz-next").textContent = "この内容で引き直す";
+    $("wiz-next").disabled = false;
+  }
+
+  function runWizard() {
+    var targets = wizTargets();
+    var result = L.redrawFromPool(state.assignment, targets, wizPoolNames());
+    if (!result.ok) { setErrors($("wiz-errors"), result.errors); return; }
+    var now = new Date().toISOString();
+    var pool = wizPoolNames();
+    result.changes.forEach(function (ch) {
+      // 児童がすでに見た先生（くじ済みだった班の先生）は、自動の引き直しではもう選ばない
+      var wasDrawn = (state.revealed[ch.classId] || [])[ch.index] === true;
+      if (wasDrawn && ch.from !== ch.to && state.excluded.indexOf(ch.from) === -1) state.excluded.push(ch.from);
+      state.revealed[ch.classId][ch.index] = false;
+      state.redrawLog.push({ classId: ch.classId, group: ch.index + 1, from: ch.from, to: ch.to, at: now, pool: pool });
+    });
+    // 自分で選んだ先生は「外した先生」から戻す
+    state.excluded = state.excluded.filter(function (n) { return pool.indexOf(n) === -1; });
+    state.assignment = result.assignment;
+    state.teachers = redrawTeachers().slice();
+    saveState();
+    closeWizard();
+    redrawOpen = false;
+    showHidden = false;
+    renderSetup();
+    $("redraw-status").textContent = targets.length +
+      "班を引き直しました。くじ画面でもう一度くじを引いてください。";
+  }
+
+  $("btn-wizard").addEventListener("click", openWizard);
+  $("wiz-cancel").addEventListener("click", closeWizard);
+  $("wiz-back").addEventListener("click", function () { wiz.step = Math.max(1, wiz.step - 1); renderWizard(); });
+  $("wiz-next").addEventListener("click", function () {
+    if (wiz.step < 3) { wiz.step++; renderWizard(); return; }
+    runWizard();
   });
 
   // ================================================================

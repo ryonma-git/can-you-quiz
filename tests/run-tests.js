@@ -210,6 +210,37 @@ test("引き直し: Aが残っているかぎり、何度やっても必ず A（
   console.log("   " + n + "回の引き直しで確認");
 });
 
+test("しぼって引き直す: 選んだ先生の中からだけ選ばれ、ほかの班は変わらず、重複しない（2000回）", () => {
+  const p = L.parseTeachersCsv(read("../data/teachers.sample.csv")); // A21 B10 C5
+  const res = L.buildAssignment(p.teachers, CONFIG.classes, groups(9, 9, 9), CONFIG.categoryTable);
+  const asg = res.assignment;
+  const targets = [{ classId: "5-3", index: 0 }, { classId: "5-3", index: 4 }, { classId: "5-1", index: 2 }, { classId: "5-2", index: 8 }];
+  // 候補 = ほかの班に決まっていない先生（引き直す班にいま入っている先生は候補に入る）
+  const cand = L.poolCandidates(p.teachers, asg, targets).map((t) => t.name);
+  assert.strictEqual(cand.length, 36 - 27 + 4);
+  targets.forEach((t) => assert.ok(cand.includes(asg[t.classId][t.index])));
+  const keptNames = Object.keys(asg).flatMap((id) => asg[id].filter((_, i) => !targets.some((t) => t.classId === id && t.index === i)));
+  keptNames.forEach((n) => assert.ok(!cand.includes(n), "ほかの班の先生が候補に入っている"));
+
+  const pool = cand.slice(0, 6);
+  const seen = new Set();
+  for (let k = 0; k < 2000; k++) {
+    const r = L.redrawFromPool(asg, targets, pool);
+    assert.ok(r.ok, JSON.stringify(r.errors));
+    r.changes.forEach((ch) => { assert.ok(pool.includes(ch.to), "プール外の先生が選ばれた"); seen.add(ch.to); });
+    const all = Object.values(r.assignment).flat();
+    assert.strictEqual(new Set(all).size, all.length, "重複あり");
+    Object.keys(asg).forEach((id) => asg[id].forEach((n, i) => {
+      if (!targets.some((t) => t.classId === id && t.index === i)) assert.strictEqual(r.assignment[id][i], n, "選んでいない班が変わった");
+    }));
+  }
+  assert.strictEqual(seen.size, pool.length, "プールの全員に出る可能性があるはず");
+  // 人数が足りない／ほかの班の先生が混ざっている → エラー
+  assert.strictEqual(L.redrawFromPool(asg, targets, pool.slice(0, 3)).ok, false);
+  assert.strictEqual(L.redrawFromPool(asg, targets, pool.slice(0, 3).concat([keptNames[0]])).ok, false);
+  console.log("   不足時:", L.redrawFromPool(asg, targets, pool.slice(0, 3)).errors[0]);
+});
+
 test("補充の先生がクラスに偏らない（A不足をCで補う場合も、Cは各クラス同じ人数）", () => {
   // A12 B6 C9 → A18必要: 6不足 → Cで補う（C合計9人を各クラス3人ずつが理想）
   const t = [];

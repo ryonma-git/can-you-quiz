@@ -85,6 +85,11 @@
         <ul id="redraw-groups" class="redraw-groups"></ul>
         <ul id="redraw-errors" class="error-box" hidden></ul>
         <button id="btn-redraw" class="btn primary">選んだ班を引き直す</button>
+
+        <h3 class="admin-h3">先生をしぼって引き直す</h3>
+        <p class="muted">引き直しで出てくる可能性のある先生を、自分で選んでから引き直します。
+          （① 班を選ぶ → ② 先生を選ぶ → ③ 確認）</p>
+        <button id="btn-wizard" class="btn">設定して引き直す</button>
       </div>
     </div>
 
@@ -145,6 +150,30 @@
     <div id="list-grid" class="list-grid"></div>
     <p id="list-note" class="list-note"></p>
   </section>
+
+  <!-- ===== 先生をしぼって引き直す（ウィザード・先生用） ===== -->
+  <div id="wizard" class="wizard" hidden>
+    <div class="wizard-box">
+      <header class="wizard-head">
+        <h2 id="wiz-title"></h2>
+        <ol class="wiz-steps">
+          <li id="wiz-s1">① 班を選ぶ</li>
+          <li id="wiz-s2">② 先生を選ぶ</li>
+          <li id="wiz-s3">③ 確認</li>
+        </ol>
+      </header>
+      <p id="wiz-lead" class="muted"></p>
+      <div id="wiz-tools" class="wiz-tools"></div>
+      <div id="wiz-main" class="wiz-main"></div>
+      <ul id="wiz-errors" class="error-box" hidden></ul>
+      <footer class="wizard-foot">
+        <span id="wiz-count" class="wiz-count"></span>
+        <button id="wiz-cancel" class="btn small-btn">やめる</button>
+        <button id="wiz-back" class="btn small-btn">戻る</button>
+        <button id="wiz-next" class="btn primary small-btn">次へ</button>
+      </footer>
+    </div>
+  </div>
 
   <script src="config.js"></script>
   <script src="lottery.js"></script>
